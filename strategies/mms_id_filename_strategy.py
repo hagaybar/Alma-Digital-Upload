@@ -10,7 +10,7 @@ Workflow:
 2. For each MMS ID, check if matching file exists
 3. Return match results with file paths
 
-Used by: Rare Books Upload workflow
+Use case: Simple PDF collections where files are named with their MMS ID.
 """
 
 import logging

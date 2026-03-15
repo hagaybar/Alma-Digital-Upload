@@ -11,7 +11,7 @@ Workflow:
 3. Discover files in the matched folder
 4. Return match results with file paths
 
-Used by: LGBTQ Upload, NIMTZOV Upload workflows
+Use case: Collections where files are organized in folders with paths stored in MARC 907$e.
 """
 
 import logging

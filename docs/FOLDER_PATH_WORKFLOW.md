@@ -1,10 +1,10 @@
-# LGBTQ/NIMTZOV Upload Workflow
+# Folder-Path Upload Workflow
 
 This document describes the workflow for uploading digital files using MARC 907$e field matching.
 
 ## Overview
 
-The LGBTQ/NIMTZOV workflow is designed for collections where:
+The folder-path workflow is designed for collections where:
 - Files are organized in folders on the filesystem
 - Folder paths are stored in MARC 907$e fields
 - Multiple files may exist per bibliographic record
@@ -67,18 +67,18 @@ Create a configuration file:
     "alma": {
         "environment": "SANDBOX",
         "set_id": "12345678900004146",
-        "library_code": "LGBTQ",
+        "library_code": "YOUR_LIBRARY_CODE",
         "access_rights_code": "",
         "access_rights_desc": ""
     },
     "matching": {
         "strategy": "marc-907e",
-        "files_root": "/mnt/c/Users/name/Documents/LGBTQ_Files",
+        "files_root": "/path/to/your/files",
         "marc_field": "907",
         "marc_subfield": "e"
     },
     "aws": {
-        "institution_code": "972TAU_INST"
+        "institution_code": "YOUR_INSTITUTION_CODE"
     },
     "output_settings": {
         "output_directory": "./output"
@@ -91,7 +91,7 @@ Create a configuration file:
 
 ### Configuration Notes
 
-- **library_code**: Must be the exact Alma library code (e.g., "LGBTQ"), not a batch identifier
+- **library_code**: Must be the exact Alma library code, not a batch identifier
 - **files_root**: Use WSL format for Windows paths (`/mnt/c/...`)
 - **marc_field**: Usually "907"
 - **marc_subfield**: Usually "e" for path, "l" for identifier
@@ -109,7 +109,7 @@ Before running, verify:
 
 2. **Files Are Accessible**:
    ```bash
-   ls -la "/mnt/c/path/to/your/files_root"
+   ls -la "/path/to/your/files_root"
    ```
 
 3. **MARC 907$e Values Match Folders**:
@@ -122,7 +122,7 @@ Always start with a dry run:
 
 ```bash
 poetry run python alma_digital_upload.py \
-    --config config/lgbtq_config.json \
+    --config config/folder_workflow_config.json \
     --match-strategy marc-907e \
     --dry-run
 ```
@@ -156,7 +156,7 @@ When ready for production:
 
 ```bash
 poetry run python alma_digital_upload.py \
-    --config config/lgbtq_config.json \
+    --config config/folder_workflow_config.json \
     --match-strategy marc-907e \
     --live
 ```
@@ -171,7 +171,7 @@ Files are uploaded with this path pattern:
 
 Example:
 ```
-972TAU_INST/upload/LGBTQ/2024/item001/image001.tif
+YOUR_INST/upload/collection/2024/item001/image001.tif
 ```
 
 ## Utility Tools
@@ -268,7 +268,7 @@ renamer = FolderRenamer(config)
 
 **Solutions**:
 1. Library code must be exact Alma library code
-2. Don't use batch identifiers (e.g., "LGBTQ" not "LGBTQ-NLI-2")
+2. Don't use batch identifiers
 3. Verify in Alma Configuration → General → Libraries
 
 ### No Files Found in Folder

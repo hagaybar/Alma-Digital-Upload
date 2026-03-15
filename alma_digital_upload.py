@@ -6,14 +6,14 @@ A unified command-line tool for uploading digital files to Alma ILS
 with support for multiple matching strategies.
 
 Supported strategies:
-- marc-907e: Match files using MARC 907$e field values (LGBTQ/NIMTZOV workflow)
-- mms-id-filename: Match files by MMS ID in filename (Rare Books workflow)
+- marc-907e: Match files using MARC 907$e field values (folder-path workflow)
+- mms-id-filename: Match files by MMS ID in filename (filename-based workflow)
 
 Usage:
-    # LGBTQ/NIMTZOV style (MARC 907$e matching)
+    # Folder-path workflow (MARC 907$e matching)
     poetry run python alma_digital_upload.py --config config.json --match-strategy marc-907e
 
-    # Rare Books style (MMS ID filename matching)
+    # Filename-based workflow (MMS ID filename matching)
     poetry run python alma_digital_upload.py --config config.json --match-strategy mms-id-filename
 
     # Run specific step only
@@ -569,10 +569,10 @@ def main():
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
-  # LGBTQ/NIMTZOV workflow (MARC 907$e matching)
+  # Folder-path workflow (MARC 907$e matching)
   python alma_digital_upload.py --config config.json --match-strategy marc-907e
 
-  # Rare Books workflow (MMS ID filename matching)
+  # Filename-based workflow (MMS ID filename matching)
   python alma_digital_upload.py --config config.json --match-strategy mms-id-filename
 
   # Dry-run mode (default, no actual changes)

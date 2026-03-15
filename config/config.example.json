@@ -14,7 +14,7 @@
         "file_extension": "pdf"
     },
     "aws": {
-        "institution_code": "972TAU_INST",
+        "institution_code": "YOUR_INSTITUTION_CODE",
         "region": "eu-central-1"
     },
     "output_settings": {
@@ -52,10 +52,10 @@
     ],
 
     "_example_usage": [
-        "# LGBTQ/NIMTZOV workflow",
+        "# Folder-path workflow",
         "python alma_digital_upload.py --config config.json --match-strategy marc-907e",
         "",
-        "# Rare Books workflow",
+        "# Filename-based workflow",
         "python alma_digital_upload.py --config config.json --match-strategy mms-id-filename",
         "",
         "# Dry-run mode (default)",

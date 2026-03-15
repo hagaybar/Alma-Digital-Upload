@@ -1,10 +1,10 @@
-# Rare Books Upload Workflow
+# Filename-Based Upload Workflow
 
 This document describes the workflow for uploading digital files using MMS ID filename matching.
 
 ## Overview
 
-The Rare Books workflow is designed for collections where:
+The filename-based workflow is designed for collections where:
 - Files are named with the MMS ID (e.g., `990012345678904146.pdf`)
 - All files are in a single input folder
 - One file per bibliographic record
@@ -60,17 +60,17 @@ Create a configuration file:
     "alma": {
         "environment": "SANDBOX",
         "set_id": "35889159610004146",
-        "library_code": "RARE_BOOKS",
+        "library_code": "YOUR_LIBRARY_CODE",
         "access_rights_code": "",
         "access_rights_desc": ""
     },
     "matching": {
         "strategy": "mms-id-filename",
-        "files_root": "/home/user/rare_books_scans",
+        "files_root": "/path/to/scans",
         "file_extension": "pdf"
     },
     "aws": {
-        "institution_code": "972TAU_INST"
+        "institution_code": "YOUR_INSTITUTION_CODE"
     },
     "output_settings": {
         "output_directory": "./output"
@@ -113,7 +113,7 @@ Always start with a dry run:
 
 ```bash
 poetry run python alma_digital_upload.py \
-    --config config/rare_books_config.json \
+    --config config/filename_config.json \
     --match-strategy mms-id-filename \
     --dry-run
 ```
@@ -148,7 +148,7 @@ When ready for production:
 
 ```bash
 poetry run python alma_digital_upload.py \
-    --config config/rare_books_config.json \
+    --config config/filename_config.json \
     --match-strategy mms-id-filename \
     --live
 ```
@@ -163,7 +163,7 @@ Files are uploaded with this path pattern:
 
 Example:
 ```
-972TAU_INST/upload/990012345678901234/990012345678901234.pdf
+YOUR_INST/upload/990012345678901234/990012345678901234.pdf
 ```
 
 ## Comparison with MARC 907$e Workflow
@@ -238,12 +238,12 @@ ls /path/to/pdfs/*.pdf | wc -l
 ls /path/to/pdfs/*.pdf | head -5
 
 # 3. Create config file
-cp config/config.example.json config/rare_books.json
+cp config/config.example.json config/my_config.json
 # Edit config with your values
 
 # 4. Dry run
 poetry run python alma_digital_upload.py \
-    --config config/rare_books.json \
+    --config config/my_config.json \
     --match-strategy mms-id-filename \
     --dry-run
 
@@ -258,7 +258,7 @@ poetry run python alma_digital_upload.py \
 
 # 7. Live run (when ready)
 poetry run python alma_digital_upload.py \
-    --config config/rare_books.json \
+    --config config/my_config.json \
     --match-strategy mms-id-filename \
     --live
 

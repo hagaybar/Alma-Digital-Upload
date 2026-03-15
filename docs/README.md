@@ -2,6 +2,8 @@
 
 A unified tool for uploading digital files to Alma ILS (Integrated Library System) with support for multiple file matching strategies.
 
+Part of TAU Libraries repositories.
+
 ## Overview
 
 Alma Digital Upload provides a streamlined workflow for:
@@ -68,7 +70,7 @@ Create a configuration file based on `config/config.example.json`:
         "marc_subfield": "e"
     },
     "aws": {
-        "institution_code": "972TAU_INST"
+        "institution_code": "YOUR_INSTITUTION_CODE"
     },
     "options": {
         "dry_run": true
@@ -90,7 +92,7 @@ poetry run python alma_digital_upload.py --config config.json --live
 
 ### Matching Strategies
 
-#### MARC 907$e Strategy (LGBTQ/NIMTZOV Workflow)
+#### MARC 907$e Strategy (Folder-Path Workflow)
 
 Matches files by extracting path identifiers from MARC 907$e field:
 
@@ -102,9 +104,9 @@ poetry run python alma_digital_upload.py --config config.json --match-strategy m
 - Uses values as folder paths relative to `files_root`
 - Uploads all files found in matched folders
 
-See [LGBTQ_WORKFLOW.md](LGBTQ_WORKFLOW.md) for detailed instructions.
+See [FOLDER_PATH_WORKFLOW.md](FOLDER_PATH_WORKFLOW.md) for detailed instructions.
 
-#### MMS ID Filename Strategy (Rare Books Workflow)
+#### MMS ID Filename Strategy (Filename-Based Workflow)
 
 Matches files by looking for filenames that match MMS IDs:
 
@@ -116,7 +118,7 @@ poetry run python alma_digital_upload.py --config config.json --match-strategy m
 - Matches files to records in the Alma set
 - Simple one-file-per-record workflow
 
-See [RARE_BOOKS_WORKFLOW.md](RARE_BOOKS_WORKFLOW.md) for detailed instructions.
+See [FILENAME_WORKFLOW.md](FILENAME_WORKFLOW.md) for detailed instructions.
 
 ### Step-by-Step Execution
 
@@ -237,8 +239,8 @@ Alma-Digital-Upload/
 ├── strategies/
 │   ├── __init__.py
 │   ├── base.py                 # Abstract MatchStrategy class
-│   ├── marc_907e_strategy.py   # LGBTQ/NIMTZOV matching
-│   └── mms_id_filename_strategy.py  # Rare Books matching
+│   ├── marc_907e_strategy.py   # Folder-path matching
+│   └── mms_id_filename_strategy.py  # Filename-based matching
 ├── utils/
 │   ├── __init__.py
 │   ├── marc_extraction.py      # MARC field extraction
@@ -254,8 +256,8 @@ Alma-Digital-Upload/
 │   └── test_strategies.py
 ├── docs/
 │   ├── README.md
-│   ├── LGBTQ_WORKFLOW.md
-│   └── RARE_BOOKS_WORKFLOW.md
+│   ├── FOLDER_PATH_WORKFLOW.md
+│   └── FILENAME_WORKFLOW.md
 ├── pyproject.toml
 └── .gitignore
 ```
