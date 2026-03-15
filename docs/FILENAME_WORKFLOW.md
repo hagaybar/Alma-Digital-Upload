@@ -5,14 +5,14 @@ This document describes the workflow for uploading digital files using MMS ID fi
 ## Overview
 
 The filename-based workflow is designed for collections where:
-- Files are named with the MMS ID (e.g., `990012345678904146.pdf`)
+- Files are named with the MMS ID (e.g., `990012345678904146.pdf`, `990012345678904146.tif`)
 - All files are in a single input folder
-- One file per bibliographic record
+- One or more files per bibliographic record (supports multiple extensions)
 
 ## How It Works
 
 1. **Set Retrieval**: Get MMS IDs from an Alma bibliographic set
-2. **File Discovery**: Scan input folder for PDF files
+2. **File Discovery**: Scan input folder for matching files (configurable extensions)
 3. **Matching**: Match files to records by MMS ID in filename
 4. **Representation Creation**: Create digital representations
 5. **Upload & Link**: Upload files to S3 and link to representations
@@ -37,15 +37,18 @@ Your files must be named with MMS IDs:
 ```
 input_folder/
 ├── 990012345678901234.pdf
-├── 990012345678905678.pdf
-├── 990012345678909012.pdf
+├── 990012345678905678.tif
+├── 990012345678909012.jpg
+├── 990012345678901234.tif   # Same MMS ID, different extension - both will upload
 └── ...
 ```
 
-**Important**: The filename must be exactly `{mms_id}.pdf`:
+**Important**: The filename must be exactly `{mms_id}.{extension}`:
 - ✓ `990012345678901234.pdf`
-- ✗ `990012345678901234_v1.pdf`
-- ✗ `book_990012345678901234.pdf`
+- ✓ `990012345678901234.tif`
+- ✓ `990012345678901234.jpg`
+- ✗ `990012345678901234_v1.pdf` (extra characters before extension)
+- ✗ `book_990012345678901234.pdf` (prefix before MMS ID)
 
 ### 3. Alma Set
 
@@ -100,14 +103,18 @@ Before running, verify:
 
 2. **Files Are Named Correctly**:
    ```bash
+   # List files (adjust extension as needed, or use * for all)
    ls /path/to/input_folder/*.pdf | head
+   ls /path/to/input_folder/*.tif | head
+   ls /path/to/input_folder/* | head   # all files
    ```
 
    All filenames should be numeric MMS IDs.
 
 3. **File Count Matches**:
    ```bash
-   ls /path/to/input_folder/*.pdf | wc -l
+   ls /path/to/input_folder/*.pdf | wc -l   # count PDFs
+   ls /path/to/input_folder/* | wc -l       # count all files
    ```
 
 ### Step 2: Dry Run
@@ -173,12 +180,13 @@ YOUR_INST/upload/990012345678901234/990012345678901234.pdf
 
 | Aspect | MMS ID Filename | MARC 907$e |
 |--------|-----------------|------------|
-| File naming | `{mms_id}.pdf` | Any filename |
+| File naming | `{mms_id}.{ext}` | Any filename |
 | File location | Single folder | Multiple folders |
-| Files per record | One | Multiple |
+| Files per record | One or more (different extensions) | Multiple |
+| Extension filtering | Configurable (list, single, or all) | All files in folder |
 | MARC dependency | None | Requires 907$e field |
 | Complexity | Simple | More complex |
-| Use case | Simple PDF collection | Complex folder structures |
+| Use case | Collections with MMS ID filenames | Complex folder structures |
 
 ## Troubleshooting
 
@@ -233,12 +241,14 @@ YOUR_INST/upload/990012345678901234/990012345678901234.pdf
 ## Example Workflow
 
 ```bash
-# 1. Check file count
-ls /path/to/pdfs/*.pdf | wc -l
+# 1. Check file count (adjust extension or use * for all)
+ls /path/to/files/*.pdf | wc -l   # PDFs only
+ls /path/to/files/* | wc -l       # all files
 # Output: 150
 
 # 2. Check naming (should show numeric IDs)
-ls /path/to/pdfs/*.pdf | head -5
+ls /path/to/files/*.pdf | head -5
+ls /path/to/files/* | head -5     # all extensions
 
 # 3. Create config file
 cp config/config.example.json config/my_config.json
