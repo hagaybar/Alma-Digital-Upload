@@ -1,0 +1,38 @@
+[tool.poetry]
+name = "alma-digital-upload"
+version = "0.1.0"
+description = "Unified tool for uploading digital files to Alma ILS with multiple matching strategies"
+authors = ["Hagay Bar <hagaybar@example.com>"]
+readme = "docs/README.md"
+license = "MIT"
+packages = [
+    { include = "alma_digital_upload.py" },
+    { include = "strategies" },
+    { include = "utils" },
+]
+
+[tool.poetry.dependencies]
+python = "^3.12"
+almaapitk = { path = "../AlmaAPITK", develop = true }
+boto3 = "^1.34"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.0"
+mypy = "^1.8"
+
+[tool.poetry.scripts]
+alma-upload = "alma_digital_upload:main"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.mypy]
+python_version = "3.12"
+warn_return_any = true
+warn_unused_configs = true
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]

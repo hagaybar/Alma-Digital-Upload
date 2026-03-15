@@ -1,0 +1,67 @@
+{
+    "alma": {
+        "environment": "SANDBOX",
+        "set_id": "YOUR_ALMA_SET_ID_HERE",
+        "library_code": "YOUR_LIBRARY_CODE",
+        "access_rights_code": "",
+        "access_rights_desc": ""
+    },
+    "matching": {
+        "strategy": "marc-907e",
+        "files_root": "/path/to/your/files",
+        "marc_field": "907",
+        "marc_subfield": "e",
+        "file_extension": "pdf"
+    },
+    "aws": {
+        "institution_code": "972TAU_INST",
+        "region": "eu-central-1"
+    },
+    "output_settings": {
+        "output_directory": "./output",
+        "file_prefix": "alma_upload"
+    },
+    "options": {
+        "dry_run": true,
+        "step": "all"
+    },
+
+    "_comments": {
+        "alma.environment": "Either 'SANDBOX' or 'PRODUCTION'",
+        "alma.set_id": "Alma set ID containing MMS IDs to process",
+        "alma.library_code": "Library code for creating representations (must be valid Alma library code)",
+        "alma.access_rights_code": "Access rights policy code (empty = use system default)",
+        "alma.access_rights_desc": "Access rights description (empty = use system default)",
+        "matching.strategy": "Either 'marc-907e' (folder matching) or 'mms-id-filename' (filename matching)",
+        "matching.files_root": "Root path to file folders (for marc-907e) or input folder (for mms-id-filename)",
+        "matching.marc_field": "MARC field for path extraction (default: 907)",
+        "matching.marc_subfield": "MARC subfield for path extraction (default: e)",
+        "matching.file_extension": "File extension for mms-id-filename strategy (default: pdf)",
+        "aws.institution_code": "Institution code for S3 path structure",
+        "options.dry_run": "true for testing (no actual uploads), false for live mode",
+        "options.step": "Run specific step (1-4) or 'all'"
+    },
+
+    "_required_environment_variables": [
+        "ALMA_SB_API_KEY (for SANDBOX)",
+        "ALMA_PROD_API_KEY (for PRODUCTION)",
+        "AWS_ACCESS_KEY",
+        "AWS_SECRET",
+        "ALMA_SB_BUCKET_NAME (for SANDBOX)",
+        "ALMA_PROD_BUCKET_NAME (for PRODUCTION)"
+    ],
+
+    "_example_usage": [
+        "# LGBTQ/NIMTZOV workflow",
+        "python alma_digital_upload.py --config config.json --match-strategy marc-907e",
+        "",
+        "# Rare Books workflow",
+        "python alma_digital_upload.py --config config.json --match-strategy mms-id-filename",
+        "",
+        "# Dry-run mode (default)",
+        "python alma_digital_upload.py --config config.json --dry-run",
+        "",
+        "# Live mode",
+        "python alma_digital_upload.py --config config.json --live"
+    ]
+}
