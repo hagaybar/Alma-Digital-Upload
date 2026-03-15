@@ -117,7 +117,7 @@ class TestMmsIdFilenameStrategy:
             "alma": {"library_code": "TEST"},
             "matching": {
                 "files_root": "/tmp",
-                "file_extension": "pdf",
+                "file_extensions": ["pdf"],
             },
         }
         return MmsIdFilenameStrategy(config)
@@ -141,6 +141,85 @@ class TestMmsIdFilenameStrategy:
 
         s3_key = strategy.get_s3_path_key(result)
         assert s3_key == "9900001234567890"
+
+    def test_single_extension_string_backwards_compat(self):
+        """Test backwards compatibility with single extension string."""
+        config = {
+            "alma": {"library_code": "TEST"},
+            "matching": {
+                "files_root": "/tmp",
+                "file_extension": "pdf",  # Old style - single string
+            },
+        }
+        strategy = MmsIdFilenameStrategy(config)
+        assert strategy.file_extensions == ["pdf"]
+        assert ".pdf" in strategy.description
+
+    def test_multiple_extensions_list(self):
+        """Test multiple extensions as list."""
+        config = {
+            "alma": {"library_code": "TEST"},
+            "matching": {
+                "files_root": "/tmp",
+                "file_extensions": ["pdf", "tif", "jpg"],
+            },
+        }
+        strategy = MmsIdFilenameStrategy(config)
+        assert strategy.file_extensions == ["pdf", "tif", "jpg"]
+        assert "pdf" in strategy.description
+        assert "tif" in strategy.description
+        assert "jpg" in strategy.description
+
+    def test_empty_extensions_accepts_all(self):
+        """Test that empty extensions accepts all files."""
+        config = {
+            "alma": {"library_code": "TEST"},
+            "matching": {
+                "files_root": "/tmp",
+                "file_extensions": [],
+            },
+        }
+        strategy = MmsIdFilenameStrategy(config)
+        assert strategy.file_extensions is None
+        assert "any extension" in strategy.description
+
+    def test_null_extensions_accepts_all(self):
+        """Test that null extensions accepts all files."""
+        config = {
+            "alma": {"library_code": "TEST"},
+            "matching": {
+                "files_root": "/tmp",
+                "file_extensions": None,
+            },
+        }
+        strategy = MmsIdFilenameStrategy(config)
+        assert strategy.file_extensions is None
+        assert "any extension" in strategy.description
+
+    def test_missing_extensions_accepts_all(self):
+        """Test that missing extensions key accepts all files."""
+        config = {
+            "alma": {"library_code": "TEST"},
+            "matching": {
+                "files_root": "/tmp",
+                # No file_extensions key
+            },
+        }
+        strategy = MmsIdFilenameStrategy(config)
+        assert strategy.file_extensions is None
+        assert "any extension" in strategy.description
+
+    def test_extensions_normalized_lowercase(self):
+        """Test that extensions are normalized to lowercase."""
+        config = {
+            "alma": {"library_code": "TEST"},
+            "matching": {
+                "files_root": "/tmp",
+                "file_extensions": ["PDF", "TIF", ".Jpg"],
+            },
+        }
+        strategy = MmsIdFilenameStrategy(config)
+        assert strategy.file_extensions == ["pdf", "tif", "jpg"]
 
 
 class TestStrategySelection:

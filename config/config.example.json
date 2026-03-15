@@ -11,7 +11,7 @@
         "files_root": "/path/to/your/files",
         "marc_field": "907",
         "marc_subfield": "e",
-        "file_extension": "pdf"
+        "file_extensions": ["pdf"]
     },
     "aws": {
         "institution_code": "YOUR_INSTITUTION_CODE",
@@ -36,7 +36,7 @@
         "matching.files_root": "Root path to file folders (for marc-907e) or input folder (for mms-id-filename)",
         "matching.marc_field": "MARC field for path extraction (default: 907)",
         "matching.marc_subfield": "MARC subfield for path extraction (default: e)",
-        "matching.file_extension": "File extension for mms-id-filename strategy (default: pdf)",
+        "matching.file_extensions": "File extensions for mms-id-filename strategy. Array: [\"pdf\", \"tif\"], string: \"pdf\", or empty/null for all extensions",
         "aws.institution_code": "Institution code for S3 path structure",
         "options.dry_run": "true for testing (no actual uploads), false for live mode",
         "options.step": "Run specific step (1-4) or 'all'"

@@ -11,12 +11,18 @@ Workflow:
 3. Return match results with file paths
 
 Use case: Simple PDF collections where files are named with their MMS ID.
+
+Configuration:
+    file_extensions: Optional list of extensions to match.
+        - List: ["pdf", "tif", "jpg"] - matches only these extensions
+        - String: "pdf" - matches single extension (backwards compatible)
+        - Empty/null/omitted: matches ALL file extensions
 """
 
 import logging
 import os
 from pathlib import Path
-from typing import Any, Dict, List, Set
+from typing import Any, Dict, List, Optional, Set, Union
 
 from strategies.base import MatchResult, MatchStrategy
 
@@ -29,6 +35,8 @@ class MmsIdFilenameStrategy(MatchStrategy):
 
     Files must be named exactly: {mms_id}.{extension}
     For example: 990012345678904146.pdf
+
+    Supports multiple extensions or all extensions when none specified.
     """
 
     def __init__(self, config: Dict[str, Any]):
@@ -36,13 +44,61 @@ class MmsIdFilenameStrategy(MatchStrategy):
         Initialize the MMS ID filename strategy.
 
         Args:
-            config: Configuration with matching settings
+            config: Configuration with matching settings.
+                file_extensions: List of extensions, single extension string,
+                    or empty/null for all extensions.
         """
         super().__init__(config)
 
         matching_config = config.get("matching", {})
-        self.file_extension = matching_config.get("file_extension", "pdf")
-        self._file_map: Dict[str, str] = {}
+        self.file_extensions = self._parse_extensions(matching_config)
+        # Maps MMS ID to file path (str) or list of paths (List[str]) for multiple files
+        self._file_map: Dict[str, Union[str, List[str]]] = {}
+
+    def _parse_extensions(
+        self, matching_config: Dict[str, Any]
+    ) -> Optional[List[str]]:
+        """
+        Parse file extensions from config.
+
+        Supports:
+            - List: ["pdf", "tif"] -> ["pdf", "tif"]
+            - String: "pdf" -> ["pdf"]
+            - Empty list/string/null: None (accept all)
+
+        Args:
+            matching_config: The matching section of config
+
+        Returns:
+            List of lowercase extensions without dots, or None for all extensions
+        """
+        # Check for new plural key first, fall back to singular for backwards compat
+        raw_value = matching_config.get(
+            "file_extensions", matching_config.get("file_extension")
+        )
+
+        # Empty, null, or missing -> accept all
+        if raw_value is None or raw_value == "" or raw_value == []:
+            return None
+
+        # String -> single-item list
+        if isinstance(raw_value, str):
+            ext = raw_value.strip().lower().lstrip(".")
+            return [ext] if ext else None
+
+        # List -> normalize each extension
+        if isinstance(raw_value, list):
+            extensions = []
+            for ext in raw_value:
+                if isinstance(ext, str):
+                    normalized = ext.strip().lower().lstrip(".")
+                    if normalized:
+                        extensions.append(normalized)
+            return extensions if extensions else None
+
+        # Unknown type -> accept all
+        logger.warning(f"Unknown file_extensions type: {type(raw_value)}, accepting all")
+        return None
 
     @property
     def name(self) -> str:
@@ -52,9 +108,16 @@ class MmsIdFilenameStrategy(MatchStrategy):
     @property
     def description(self) -> str:
         """Return strategy description."""
+        if self.file_extensions is None:
+            ext_desc = "any extension"
+        elif len(self.file_extensions) == 1:
+            ext_desc = f".{self.file_extensions[0]}"
+        else:
+            ext_desc = f".{{{', '.join(self.file_extensions)}}}"
+
         return (
             f"Matches files by MMS ID in filename. "
-            f"Looks for files named {{mms_id}}.{self.file_extension} in the input folder."
+            f"Looks for files named {{mms_id}}.ext ({ext_desc}) in the input folder."
         )
 
     def match(
@@ -120,8 +183,11 @@ class MmsIdFilenameStrategy(MatchStrategy):
             logger.error(f"Input path is not a directory: {self.files_root}")
             return file_map
 
-        # Scan for files with the expected extension
-        pattern = f"*.{self.file_extension}"
+        # Log what extensions we're looking for
+        if self.file_extensions is None:
+            logger.info("Scanning for files with any extension")
+        else:
+            logger.info(f"Scanning for files with extensions: {self.file_extensions}")
 
         for item in os.listdir(self.files_root):
             item_path = os.path.join(self.files_root, item)
@@ -129,17 +195,37 @@ class MmsIdFilenameStrategy(MatchStrategy):
             if not os.path.isfile(item_path):
                 continue
 
-            # Check if file has the expected extension
-            if not item.lower().endswith(f".{self.file_extension}"):
+            # Check if file has an extension
+            if "." not in item:
                 continue
 
-            # Extract MMS ID from filename
-            filename_without_ext = item[: -(len(self.file_extension) + 1)]
+            # Get extension (lowercase, without dot)
+            file_ext = item.rsplit(".", 1)[-1].lower()
+
+            # Check if extension matches (if filtering)
+            if self.file_extensions is not None:
+                if file_ext not in self.file_extensions:
+                    continue
+
+            # Extract MMS ID from filename (everything before the last dot)
+            filename_without_ext = item.rsplit(".", 1)[0]
 
             # Validate MMS ID format (should be numeric)
             if filename_without_ext.isdigit():
-                file_map[filename_without_ext] = item_path
-                logger.debug(f"Mapped: {filename_without_ext} -> {item}")
+                # Handle multiple files for same MMS ID (different extensions)
+                if filename_without_ext in file_map:
+                    # Already have a file for this MMS ID
+                    existing = file_map[filename_without_ext]
+                    if isinstance(existing, str):
+                        # Convert to list
+                        file_map[filename_without_ext] = [existing, item_path]
+                    else:
+                        # Append to existing list
+                        file_map[filename_without_ext].append(item_path)
+                    logger.debug(f"Additional file for {filename_without_ext}: {item}")
+                else:
+                    file_map[filename_without_ext] = item_path
+                    logger.debug(f"Mapped: {filename_without_ext} -> {item}")
             else:
                 invalid_files.append(item)
                 logger.debug(f"Invalid MMS ID format: {item}")
@@ -166,27 +252,46 @@ class MmsIdFilenameStrategy(MatchStrategy):
             MatchResult for this record
         """
         if mms_id in self._file_map:
-            file_path = self._file_map[mms_id]
-            filename = os.path.basename(file_path)
+            file_entry = self._file_map[mms_id]
 
-            logger.debug(f"Match found: {mms_id} -> {filename}")
+            # Handle both single file (string) and multiple files (list)
+            if isinstance(file_entry, str):
+                file_paths = [file_entry]
+            else:
+                file_paths = file_entry
+
+            filenames = [os.path.basename(fp) for fp in file_paths]
+
+            if len(file_paths) == 1:
+                logger.debug(f"Match found: {mms_id} -> {filenames[0]}")
+            else:
+                logger.debug(f"Match found: {mms_id} -> {len(file_paths)} files: {filenames}")
 
             return MatchResult(
                 mms_id=mms_id,
                 matched=True,
-                file_paths=[file_path],
+                file_paths=file_paths,
                 match_key=mms_id,
                 status="matched",
-                metadata={"filename": filename},
+                metadata={"filenames": filenames},
             )
         else:
             logger.debug(f"No file found for: {mms_id}")
+
+            # Build descriptive error message
+            if self.file_extensions is None:
+                ext_desc = "any extension"
+            elif len(self.file_extensions) == 1:
+                ext_desc = f".{self.file_extensions[0]}"
+            else:
+                ext_desc = f".{{{', '.join(self.file_extensions)}}}"
+
             return MatchResult(
                 mms_id=mms_id,
                 matched=False,
                 match_key=mms_id,
                 status="no_file",
-                error=f"No file found matching {mms_id}.{self.file_extension}",
+                error=f"No file found matching {mms_id} with {ext_desc}",
             )
 
     def get_s3_path_key(self, match_result: MatchResult) -> str:

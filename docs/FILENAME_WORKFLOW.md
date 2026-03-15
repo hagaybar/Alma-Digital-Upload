@@ -67,7 +67,7 @@ Create a configuration file:
     "matching": {
         "strategy": "mms-id-filename",
         "files_root": "/path/to/scans",
-        "file_extension": "pdf"
+        "file_extensions": ["pdf"]
     },
     "aws": {
         "institution_code": "YOUR_INSTITUTION_CODE"
@@ -85,7 +85,10 @@ Create a configuration file:
 
 - **library_code**: Must be the exact Alma library code
 - **files_root**: Path to folder containing PDF files
-- **file_extension**: Usually "pdf" but can be changed
+- **file_extensions**: File extensions to match:
+  - Array: `["pdf", "tif", "jpg"]` - matches only these extensions
+  - String: `"pdf"` - single extension (backwards compatible)
+  - Empty/null/omitted: matches ALL file extensions
 
 ## Usage
 
@@ -296,7 +299,7 @@ If you have mixed file types:
     "matching": {
         "strategy": "mms-id-filename",
         "files_root": "/path/to/files",
-        "file_extension": "tif"
+        "file_extensions": ["tif"]
     }
 }
 ```
