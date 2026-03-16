@@ -1,0 +1,18 @@
+{
+  "input": {
+    "alma_set_id": "35764726170004146",
+    "environment": "PRODUCTION",
+    "files_root_directory": "C:/Users/hagaybar/OneDrive - Tel-Aviv University/My Personal files/systems/Alma/Alma-D/archives_load/LGTB/IL-LGBTQ-ARCHIVE"
+  },
+  "columns": [
+    {"name": "MMS_ID", "source": "alma_set"},
+    {"name": "Library_Code", "default_value": "LGBTQ"},
+    {"name": "Access_Rights_Code", "default_value": "29923706960004146"},
+    {"name": "Access_Rights_Description", "default_value": "View only for TAU users"}
+  ],
+  "output_settings": {
+    "file_prefix": "alma_input",
+    "include_headers": false,
+    "output_directory": "./output_prod_alma_lgtbq_files_config_27_07_25"
+  }
+}
