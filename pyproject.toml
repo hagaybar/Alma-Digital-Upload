@@ -13,7 +13,8 @@ packages = [
 
 [tool.poetry.dependencies]
 python = "^3.12"
-almaapitk = { path = "../AlmaAPITK", develop = true }
+# AlmaAPITK package from PyPI (https://pypi.org/project/almaapitk/)
+almaapitk = ">=0.3.1"
 boto3 = "^1.34"
 
 [tool.poetry.group.dev.dependencies]
