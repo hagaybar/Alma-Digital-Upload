@@ -169,12 +169,12 @@ class Marc907Extractor:
             return results
 
         except Exception as e:
-            logger.error(f"Error processing MMS ID {mms_id}: {e}")
+            logger.error(f"Error processing MMS ID {mms_id}: {type(e).__name__}")
             return [
                 ExtractionResult(
                     mms_id=mms_id,
                     status="error",
-                    error=str(e),
+                    error=type(e).__name__,
                 )
             ]
 
@@ -282,7 +282,7 @@ class Marc907Extractor:
             return output_file
 
         except IOError as e:
-            logger.error(f"Failed to write TSV file: {e}")
+            logger.error(f"Failed to write TSV file: {type(e).__name__}")
             raise
 
     def get_statistics(self, results: List[ExtractionResult]) -> Dict[str, int]:

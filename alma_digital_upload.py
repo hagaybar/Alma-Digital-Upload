@@ -77,6 +77,12 @@ def setup_logging(output_dir: str, prefix: str = "alma_upload") -> logging.Logge
     logger.addHandler(file_handler)
     logger.addHandler(console_handler)
 
+    # Pin noisy/secret-bearing third-party loggers to WARNING so AWS SDK
+    # debug output (which can include credential material) is not captured.
+    logging.getLogger("botocore").setLevel(logging.WARNING)
+    logging.getLogger("boto3").setLevel(logging.WARNING)
+    logging.getLogger("urllib3").setLevel(logging.WARNING)
+
     logger.info(f"Logging initialized - Log file: {log_file}")
     return logger
 
@@ -339,9 +345,9 @@ class AlmaDigitalUploader:
 
             except Exception as e:
                 result.metadata["representation_action"] = "error"
-                result.metadata["representation_error"] = str(e)
+                result.metadata["representation_error"] = type(e).__name__
                 failed += 1
-                self.logger.error(f"Error processing {mms_id}: {e}")
+                self.logger.error(f"Error processing {mms_id}: {type(e).__name__}")
 
         self.logger.info(f"\n=== Representation Summary ===")
         self.logger.info(f"Created: {created}")
@@ -496,7 +502,9 @@ class AlmaDigitalUploader:
 
                 except Exception as e:
                     failed_uploads += 1
-                    self.logger.error(f"Upload failed for {filename}: {e}")
+                    self.logger.error(
+                        f"Upload failed for {filename}: {type(e).__name__}"
+                    )
 
         self.logger.info(f"\n=== Upload Summary ===")
         self.logger.info(f"Files uploaded: {files_uploaded}")
@@ -659,7 +667,7 @@ Examples:
         print("\nUpload completed successfully!")
 
     except Exception as e:
-        print(f"\nERROR: {e}")
+        print(f"\nERROR: {type(e).__name__} (see log for details)")
         sys.exit(1)
 
 

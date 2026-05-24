@@ -189,12 +189,12 @@ class Marc907eStrategy(MatchStrategy):
             )
 
         except Exception as e:
-            logger.error(f"Error matching {mms_id}: {e}")
+            logger.error(f"Error matching {mms_id}: {type(e).__name__}")
             return MatchResult(
                 mms_id=mms_id,
                 matched=False,
                 status="error",
-                error=str(e),
+                error=type(e).__name__,
             )
 
     def _discover_files(self, folder_path: str) -> List[str]:
@@ -214,7 +214,9 @@ class Marc907eStrategy(MatchStrategy):
                 if os.path.isfile(item_path):
                     files.append(item_path)
         except Exception as e:
-            logger.error(f"Error discovering files in {folder_path}: {e}")
+            logger.error(
+                f"Error discovering files in {folder_path}: {type(e).__name__}"
+            )
 
         return sorted(files)
 

@@ -10,12 +10,40 @@ import csv
 import json
 import logging
 import os
+import re
 from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Set
 
 logger = logging.getLogger(__name__)
+
+# Keys whose values are treated as secrets and redacted before persisting config.
+_SECRET_KEY_PATTERN = re.compile(
+    r"api[_-]?key|secret|token|password|passwd|credential|authorization|auth",
+    re.IGNORECASE,
+)
+
+
+def _redact_config(value: Any) -> Any:
+    """
+    Return a deep copy of a config structure with secret values redacted.
+
+    Any dict key matching common secret names (api_key, secret, token,
+    password, credential, authorization, auth) has its value replaced by
+    "***REDACTED***". Non-secret keys are preserved intact.
+    """
+    if isinstance(value, dict):
+        redacted: Dict[Any, Any] = {}
+        for key, item in value.items():
+            if isinstance(key, str) and _SECRET_KEY_PATTERN.search(key):
+                redacted[key] = "***REDACTED***"
+            else:
+                redacted[key] = _redact_config(item)
+        return redacted
+    if isinstance(value, list):
+        return [_redact_config(item) for item in value]
+    return value
 
 
 @dataclass
@@ -149,7 +177,7 @@ class ResumeHelper:
             )
 
         except Exception as e:
-            logger.error(f"Error reading log info: {e}")
+            logger.error(f"Error reading log info: {type(e).__name__}")
             raise
 
     def extract_processed_mms_ids(self, log_file_path: str) -> ProcessingResults:
@@ -239,7 +267,7 @@ class ResumeHelper:
             return results
 
         except Exception as e:
-            logger.error(f"Error extracting processed IDs: {e}")
+            logger.error(f"Error extracting processed IDs: {type(e).__name__}")
             raise
 
     def create_resume_tsv(
@@ -304,7 +332,7 @@ class ResumeHelper:
             return output_path
 
         except Exception as e:
-            logger.error(f"Error creating resume TSV: {e}")
+            logger.error(f"Error creating resume TSV: {type(e).__name__}")
             raise
 
     def create_resume_config(
@@ -349,15 +377,15 @@ class ResumeHelper:
                 config["output_settings"] = {}
             config["output_settings"]["file_prefix"] = "alma_resume"
 
-            # Write new config
+            # Write new config (redact any secret values before persisting)
             with open(output_config_path, "w") as f:
-                json.dump(config, f, indent=2)
+                json.dump(_redact_config(config), f, indent=2)
 
             logger.info(f"Resume config created: {output_config_path}")
             return output_config_path
 
         except Exception as e:
-            logger.error(f"Error creating resume config: {e}")
+            logger.error(f"Error creating resume config: {type(e).__name__}")
             raise
 
     def display_analysis(self, results: ProcessingResults) -> None:

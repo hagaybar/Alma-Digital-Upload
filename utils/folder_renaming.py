@@ -308,8 +308,10 @@ class FolderRenamer:
             logger.error(f"Error: {candidate.error}")
         except Exception as e:
             candidate.status = "error"
-            candidate.error = str(e)
-            logger.error(f"Error renaming {candidate.old_name}: {e}")
+            candidate.error = type(e).__name__
+            logger.error(
+                f"Error renaming {candidate.old_name}: {type(e).__name__}"
+            )
 
         return candidate
 
@@ -393,13 +395,19 @@ class FolderRenamer:
                 writer.writerow(["MMS_ID", "Old_Name", "New_Name", "Status", "Error"])
 
                 for result in results:
+                    # Write only a sanitized error category, never raw OS error
+                    # text. The first token of the recorded error is a safe
+                    # category/exception type; any trailing detail is dropped.
+                    error_category = (
+                        result.error.split(":")[0].strip() if result.error else ""
+                    )
                     writer.writerow(
                         [
                             result.mms_id,
                             result.old_name,
                             result.new_name,
                             result.status,
-                            result.error or "",
+                            error_category,
                         ]
                     )
 
@@ -407,7 +415,7 @@ class FolderRenamer:
             return output_path
 
         except Exception as e:
-            logger.error(f"Failed to write report: {e}")
+            logger.error(f"Failed to write report: {type(e).__name__}")
             raise
 
     def get_statistics(self, results: List[RenameCandidate]) -> Dict[str, int]:

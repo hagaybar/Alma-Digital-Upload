@@ -97,7 +97,7 @@ class FolderMatcher:
             logger.error(f"TSV file not found: {tsv_path}")
             raise
         except Exception as e:
-            logger.error(f"Error reading TSV file: {e}")
+            logger.error(f"Error reading TSV file: {type(e).__name__}")
             raise
 
     def list_folders(self, folder_path: str) -> Set[str]:
@@ -129,7 +129,7 @@ class FolderMatcher:
             return folders
 
         except Exception as e:
-            logger.error(f"Error listing folders: {e}")
+            logger.error(f"Error listing folders: {type(e).__name__}")
             raise
 
     def match_records_to_folders(
@@ -263,7 +263,7 @@ class FolderMatcher:
             return output_path
 
         except Exception as e:
-            logger.error(f"Error writing report: {e}")
+            logger.error(f"Error writing report: {type(e).__name__}")
             raise
 
     def get_statistics(
