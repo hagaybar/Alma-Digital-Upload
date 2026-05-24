@@ -1,0 +1,27 @@
+{
+  "schemaVersion": "2026.01.results-v1",
+  "effectId": "01KSC5AFWTQ4TDRZTE97TDQVR7",
+  "taskId": "commit",
+  "invocationKey": "alma-digital-upload/almaapitk-upgrade-verify:S000008:commit",
+  "status": "ok",
+  "result": {
+    "branch": "main",
+    "commit": "e894719",
+    "committed": true,
+    "note": "poetry.lock gitignored (not committed); .a5c run state not committed. Commit references #1 without closing (Phase 1 only); not pushed.",
+    "staged": [
+      "pyproject.toml"
+    ]
+  },
+  "startedAt": "2026-05-24T04:54:33.235Z",
+  "finishedAt": "2026-05-24T04:54:33.235Z",
+  "value": {
+    "branch": "main",
+    "commit": "e894719",
+    "committed": true,
+    "note": "poetry.lock gitignored (not committed); .a5c run state not committed. Commit references #1 without closing (Phase 1 only); not pushed.",
+    "staged": [
+      "pyproject.toml"
+    ]
+  }
+}

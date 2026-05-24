@@ -1,0 +1,20 @@
+{
+  "type": "EFFECT_REQUESTED",
+  "recordedAt": "2026-05-24T05:10:35.730Z",
+  "data": {
+    "harness": "claude-code",
+    "effectId": "01KSC68SYB1308TVH7MNB8K012",
+    "invocationKey": "alma-digital-upload/sensitive-data-leak-audit:S000002:audit-file-writes",
+    "invocationHash": "9c7beecadf2ab83d505bb34e710a93268122400e4a551dd9cd348cdfc65bc1e6",
+    "stepId": "S000002",
+    "taskId": "audit-file-writes",
+    "kind": "agent",
+    "label": "audit",
+    "taskDefRef": "tasks/01KSC68SYB1308TVH7MNB8K012/task.json",
+    "labels": [
+      "audit",
+      "file-writes"
+    ]
+  },
+  "checksum": "d57e0b48925aef9f294c2233ff6511e84170b5dd802cb063dac555d271c06188"
+}

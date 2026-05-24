@@ -1,0 +1,19 @@
+{
+  "type": "EFFECT_REQUESTED",
+  "recordedAt": "2026-05-24T04:41:20.035Z",
+  "data": {
+    "harness": "claude-code",
+    "effectId": "01KSC4K7CP570WX19EB70Y00TQ",
+    "invocationKey": "alma-digital-upload/almaapitk-upgrade-verify:S000007:__sdk.breakpoint",
+    "invocationHash": "093e9221a8646581b69444b478cdcb3cac54a92b457545a18acfafc350c3517f",
+    "stepId": "S000007",
+    "taskId": "__sdk.breakpoint",
+    "kind": "breakpoint",
+    "label": "breakpoint",
+    "taskDefRef": "tasks/01KSC4K7CP570WX19EB70Y00TQ/task.json",
+    "labels": [
+      "breakpoint"
+    ]
+  },
+  "checksum": "dab357bc5e9e2aff50bcb9e4a287414fdac2b97a3f0fb4a0ee0975bd16db4247"
+}

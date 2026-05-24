@@ -75,3 +75,8 @@ htmlcov/
 
 # mypy
 .mypy_cache/
+
+# Babysitter orchestration: track processes + run journals, exclude heavy/regenerable dirs
+.a5c/node_modules/
+.a5c/cache/
+.a5c/logs/

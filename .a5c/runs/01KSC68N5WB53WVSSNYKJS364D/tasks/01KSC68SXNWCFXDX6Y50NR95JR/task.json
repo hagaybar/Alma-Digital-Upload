@@ -1,0 +1,62 @@
+{
+  "agent": {
+    "name": "general-purpose",
+    "outputSchema": {
+      "properties": {
+        "findings": {
+          "items": {
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "notes": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "findings"
+      ],
+      "type": "object"
+    },
+    "prompt": {
+      "context": {
+        "checklistSections": [
+          1,
+          2,
+          6
+        ],
+        "projectRoot": "."
+      },
+      "instructions": [
+        "Scope: project Python only. EXCLUDE .a5c/, .venv/, site-packages.",
+        "Find all output call sites: print, pprint, logging/logger.*, log.*, sys.stdout.write, sys.stderr.write, rich.print/console, traceback.print_exc/format_exc, warnings.warn, and any custom logger wrappers.",
+        "For each, classify risk: DIRECT (f-string/%/.format on names like key/token/secret/password/auth/credential/api_key) or INDIRECT (logging a whole response/request/HTTP-exception/config dict/locals()/vars(self)/headers dict; logging str(e) from requests/urllib/httpx where a credential-bearing URL may appear).",
+        "Also inspect every custom class __repr__/__str__ for credential or PII fields that would leak when logged.",
+        "STRICT SECRET HANDLING: report file:line and the structural pattern only. NEVER print actual secret values, .env contents, or expand credentials.",
+        "Do NOT modify any files. This is audit-only."
+      ],
+      "outputFormat": "JSON: { findings: [{ file, line, category, what, whySensitive, severity, proposedFix }], scanned: { callSites: number }, notes: string }",
+      "role": "Application security auditor (data-leak focus)",
+      "task": "Find every code path that emits to stdout/stderr/logs and judge whether it could carry a secret or PII."
+    }
+  },
+  "description": "Issue #2 checklist sections 1, 2, 6 — terminal/log output call sites and string-representation leaks",
+  "io": {
+    "inputJsonPath": "tasks/01KSC68SXNWCFXDX6Y50NR95JR/input.json",
+    "outputJsonPath": "tasks/01KSC68SXNWCFXDX6Y50NR95JR/output.json"
+  },
+  "kind": "agent",
+  "labels": [
+    "audit",
+    "output-paths"
+  ],
+  "title": "Audit logging/print/output calls + __repr__/__str__",
+  "schemaVersion": "2026.01.tasks-v1",
+  "effectId": "01KSC68SXNWCFXDX6Y50NR95JR",
+  "taskId": "audit-output-paths",
+  "invocationKey": "alma-digital-upload/sensitive-data-leak-audit:S000001:audit-output-paths",
+  "stepId": "S000001",
+  "inputs": {
+    "projectRoot": "."
+  }
+}

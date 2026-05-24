@@ -1,0 +1,17 @@
+{
+  "schemaVersion": "2026.01.results-v1",
+  "effectId": "01KSC72NFY4VZC0EZXKRF8VYJF",
+  "taskId": "__sdk.breakpoint",
+  "invocationKey": "alma-digital-upload/sensitive-data-leak-audit:S000010:__sdk.breakpoint",
+  "status": "ok",
+  "result": {
+    "approved": true,
+    "response": "Approve commit to main"
+  },
+  "startedAt": "2026-05-24T05:25:50.170Z",
+  "finishedAt": "2026-05-24T05:25:50.170Z",
+  "value": {
+    "approved": true,
+    "response": "Approve commit to main"
+  }
+}

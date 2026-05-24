@@ -1,0 +1,8 @@
+{
+  "aligned": true,
+  "testsPass": true,
+  "apiAligned": true,
+  "redactionActive": true,
+  "summary": "almaapitk 0.3.1->0.4.5 verified offline: 25 tests pass, all 10 used API symbols/signatures resolve with 0 breaking changes, credential redaction active (Authorization rendered as ***REDACTED***). poetry.lock is gitignored so commit = pyproject.toml pin only.",
+  "remediation": ""
+}

@@ -1,0 +1,7 @@
+{
+  "oldPin": "almaapitk = \">=0.3.1\"",
+  "newPin": "almaapitk = \">=0.4.5\"",
+  "targetVersion": "0.4.5",
+  "maxAttempts": 3,
+  "issue": 1
+}

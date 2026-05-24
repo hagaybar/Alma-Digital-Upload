@@ -1,0 +1,27 @@
+{
+  "description": "Stage pyproject.toml + poetry.lock and commit to main (only after owner approval)",
+  "io": {
+    "inputJsonPath": "tasks/01KSC5AFWTQ4TDRZTE97TDQVR7/input.json",
+    "outputJsonPath": "tasks/01KSC5AFWTQ4TDRZTE97TDQVR7/output.json"
+  },
+  "kind": "shell",
+  "labels": [
+    "commit",
+    "git"
+  ],
+  "shell": {
+    "command": "# Orchestrator stages pyproject.toml and poetry.lock and commits to main with an issue-referencing message"
+  },
+  "title": "Commit the verified upgrade to main",
+  "schemaVersion": "2026.01.tasks-v1",
+  "effectId": "01KSC5AFWTQ4TDRZTE97TDQVR7",
+  "taskId": "commit",
+  "invocationKey": "alma-digital-upload/almaapitk-upgrade-verify:S000008:commit",
+  "stepId": "S000008",
+  "inputs": {
+    "issue": 1,
+    "lockedVersion": "0.4.5",
+    "newPin": "almaapitk = \">=0.4.5\"",
+    "targetVersion": "0.4.5"
+  }
+}

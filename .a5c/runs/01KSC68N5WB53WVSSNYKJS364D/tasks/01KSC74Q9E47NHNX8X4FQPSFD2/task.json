@@ -1,0 +1,62 @@
+{
+  "description": "Stage the modified tracked files and commit to main (only after owner approval)",
+  "io": {
+    "inputJsonPath": "tasks/01KSC74Q9E47NHNX8X4FQPSFD2/input.json",
+    "outputJsonPath": "tasks/01KSC74Q9E47NHNX8X4FQPSFD2/output.json"
+  },
+  "kind": "shell",
+  "labels": [
+    "commit",
+    "git"
+  ],
+  "shell": {
+    "command": "# Orchestrator stages the fixed tracked files and commits to main with an issue-referencing message"
+  },
+  "title": "Commit approved leak fixes to main",
+  "schemaVersion": "2026.01.tasks-v1",
+  "effectId": "01KSC74Q9E47NHNX8X4FQPSFD2",
+  "taskId": "commit",
+  "invocationKey": "alma-digital-upload/sensitive-data-leak-audit:S000011:commit",
+  "stepId": "S000011",
+  "inputs": {
+    "fixResult": {
+      "deferred": [
+        {
+          "id": "G6",
+          "reason": "resume_helper.py:296 TSV passthrough / folder_matching.py:260 folder names / marc_extraction.py:271 MARC TSV — data-dependent PII, not a code defect"
+        },
+        {
+          "id": "G7",
+          "reason": "alma_digital_upload.py:431 'AWS credentials loaded' info log — no secret value"
+        }
+      ],
+      "deferredCount": 4,
+      "filesModified": [
+        "alma_digital_upload.py",
+        "utils/resume_helper.py",
+        "utils/marc_extraction.py",
+        "utils/folder_matching.py",
+        "utils/folder_renaming.py",
+        "strategies/marc_907e_strategy.py"
+      ],
+      "fixedCount": 21,
+      "groupsApplied": [
+        "G1",
+        "G2",
+        "G3",
+        "G4",
+        "G5"
+      ],
+      "remainingNonEmittedExceptionText": [
+        "alma_digital_upload.py:110 raise ValueError(...{e}) — caught+sanitized by G2 at top level, never emitted raw; JSONDecodeError carries no credentials"
+      ],
+      "remainingRawExceptionEmissions": [],
+      "supplementaryHardening": [
+        "utils/marc_extraction.py:177 error=str(e)->type(e).__name__",
+        "strategies/marc_907e_strategy.py:197 error=str(e)->type(e).__name__"
+      ],
+      "traceabilityPreserved": true
+    },
+    "issue": 2
+  }
+}

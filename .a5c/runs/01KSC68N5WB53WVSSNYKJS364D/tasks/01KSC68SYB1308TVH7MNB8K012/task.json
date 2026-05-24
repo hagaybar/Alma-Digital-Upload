@@ -1,0 +1,60 @@
+{
+  "agent": {
+    "name": "general-purpose",
+    "outputSchema": {
+      "properties": {
+        "findings": {
+          "items": {
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "notes": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "findings"
+      ],
+      "type": "object"
+    },
+    "prompt": {
+      "context": {
+        "checklistSections": [
+          3
+        ],
+        "projectRoot": "."
+      },
+      "instructions": [
+        "Scope: project Python only. EXCLUDE .a5c/, .venv/, site-packages.",
+        "Find file writes: open(...).write, Path(...).write_text/write_bytes, to_csv/to_json/to_excel, json.dump/dumps, yaml.dump, csv.writer, pickle.dump, logging FileHandler targets, and any report/export/dump/debug-capture writers.",
+        "For each, identify WHAT is written and trace whether the source data could include credentials, Authorization headers, credential-bearing URLs, or PII (patron records, emails, IDs).",
+        "Pay attention to output dirs/log files this tool creates during normal runs.",
+        "STRICT SECRET HANDLING: report file:line + structure only; never print secret values.",
+        "Do NOT modify any files. Audit-only."
+      ],
+      "outputFormat": "JSON: { findings: [{ file, line, category, what, whySensitive, severity, proposedFix }], scanned: { writeSites: number }, notes: string }",
+      "role": "Application security auditor (data-leak focus)",
+      "task": "Find every file-write path and judge whether the written data could contain secrets or PII."
+    }
+  },
+  "description": "Issue #2 checklist section 3 — files written during operation that could echo secrets/PII",
+  "io": {
+    "inputJsonPath": "tasks/01KSC68SYB1308TVH7MNB8K012/input.json",
+    "outputJsonPath": "tasks/01KSC68SYB1308TVH7MNB8K012/output.json"
+  },
+  "kind": "agent",
+  "labels": [
+    "audit",
+    "file-writes"
+  ],
+  "title": "Audit file writes and output artifacts",
+  "schemaVersion": "2026.01.tasks-v1",
+  "effectId": "01KSC68SYB1308TVH7MNB8K012",
+  "taskId": "audit-file-writes",
+  "invocationKey": "alma-digital-upload/sensitive-data-leak-audit:S000002:audit-file-writes",
+  "stepId": "S000002",
+  "inputs": {
+    "projectRoot": "."
+  }
+}

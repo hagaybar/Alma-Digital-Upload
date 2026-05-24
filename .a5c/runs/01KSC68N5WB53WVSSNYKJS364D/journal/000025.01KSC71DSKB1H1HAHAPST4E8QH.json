@@ -1,0 +1,20 @@
+{
+  "type": "EFFECT_REQUESTED",
+  "recordedAt": "2026-05-24T05:24:02.483Z",
+  "data": {
+    "harness": "claude-code",
+    "effectId": "01KSC71DS7T2FXX1VP4AMKDHHN",
+    "invocationKey": "alma-digital-upload/sensitive-data-leak-audit:S000007:run-tests",
+    "invocationHash": "08cf139ca0cdb5ea690345321a75619f609baca21a0042646d4cb7ea2674c85b",
+    "stepId": "S000007",
+    "taskId": "run-tests",
+    "kind": "shell",
+    "label": "verification",
+    "taskDefRef": "tasks/01KSC71DS7T2FXX1VP4AMKDHHN/task.json",
+    "labels": [
+      "verification",
+      "tests"
+    ]
+  },
+  "checksum": "cf9ed0d2ff0867f2e95c599cac77da4da48edb9076d61a6b5ca754ddcabe3fbe"
+}

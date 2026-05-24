@@ -1,0 +1,25 @@
+{
+  "schemaVersion": "2026.01.results-v1",
+  "effectId": "01KSC4HBE1PTHJTBSZ9T804D3Y",
+  "taskId": "compatibility-review",
+  "invocationKey": "alma-digital-upload/almaapitk-upgrade-verify:S000006:compatibility-review",
+  "status": "ok",
+  "result": {
+    "aligned": true,
+    "apiAligned": true,
+    "redactionActive": true,
+    "remediation": "",
+    "summary": "almaapitk 0.3.1->0.4.5 verified offline: 25 tests pass, all 10 used API symbols/signatures resolve with 0 breaking changes, credential redaction active (Authorization rendered as ***REDACTED***). poetry.lock is gitignored so commit = pyproject.toml pin only.",
+    "testsPass": true
+  },
+  "startedAt": "2026-05-24T04:41:15.185Z",
+  "finishedAt": "2026-05-24T04:41:15.185Z",
+  "value": {
+    "aligned": true,
+    "apiAligned": true,
+    "redactionActive": true,
+    "remediation": "",
+    "summary": "almaapitk 0.3.1->0.4.5 verified offline: 25 tests pass, all 10 used API symbols/signatures resolve with 0 breaking changes, credential redaction active (Authorization rendered as ***REDACTED***). poetry.lock is gitignored so commit = pyproject.toml pin only.",
+    "testsPass": true
+  }
+}

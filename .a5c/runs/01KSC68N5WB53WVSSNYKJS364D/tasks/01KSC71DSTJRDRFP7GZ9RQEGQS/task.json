@@ -1,0 +1,351 @@
+{
+  "agent": {
+    "name": "general-purpose",
+    "outputSchema": {
+      "properties": {
+        "allResolved": {
+          "type": "boolean"
+        },
+        "results": {
+          "items": {
+            "type": "object"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "allResolved"
+      ],
+      "type": "object"
+    },
+    "prompt": {
+      "context": {
+        "attempt": 1,
+        "fixResult": {
+          "deferred": [
+            {
+              "id": "G6",
+              "reason": "resume_helper.py:296 TSV passthrough / folder_matching.py:260 folder names / marc_extraction.py:271 MARC TSV — data-dependent PII, not a code defect"
+            },
+            {
+              "id": "G7",
+              "reason": "alma_digital_upload.py:431 'AWS credentials loaded' info log — no secret value"
+            }
+          ],
+          "deferredCount": 4,
+          "filesModified": [
+            "alma_digital_upload.py",
+            "utils/resume_helper.py",
+            "utils/marc_extraction.py",
+            "utils/folder_matching.py",
+            "utils/folder_renaming.py",
+            "strategies/marc_907e_strategy.py"
+          ],
+          "fixedCount": 21,
+          "groupsApplied": [
+            "G1",
+            "G2",
+            "G3",
+            "G4",
+            "G5"
+          ],
+          "remainingNonEmittedExceptionText": [
+            "alma_digital_upload.py:110 raise ValueError(...{e}) — caught+sanitized by G2 at top level, never emitted raw; JSONDecodeError carries no credentials"
+          ],
+          "remainingRawExceptionEmissions": [],
+          "supplementaryHardening": [
+            "utils/marc_extraction.py:177 error=str(e)->type(e).__name__",
+            "strategies/marc_907e_strategy.py:197 error=str(e)->type(e).__name__"
+          ],
+          "traceabilityPreserved": true
+        },
+        "report": {
+          "clean": {
+            "checkedInSecrets": "none",
+            "gitHistory": "no committed secrets; rewrite not needed",
+            "reprStr": "no leaks"
+          },
+          "findings": [
+            {
+              "id": "G1",
+              "proposedFix": "redact config keys (api_key|secret|token|password|credential|authorization) before json.dump",
+              "recommend": "fix",
+              "severity": "actual-leak",
+              "sites": [
+                "utils/resume_helper.py:354"
+              ],
+              "title": "Unfiltered user-config dump to resume_config_*.json"
+            },
+            {
+              "id": "G2",
+              "proposedFix": "print type(e).__name__ only / route via sanitized logger",
+              "recommend": "fix",
+              "severity": "actual-leak",
+              "sites": [
+                "alma_digital_upload.py:662"
+              ],
+              "title": "print(f'ERROR: {e}') raw exception to stdout"
+            },
+            {
+              "id": "G3",
+              "proposedFix": "log type(e).__name__ + safe id; drop str(e) from metadata at :342",
+              "recommend": "fix",
+              "severity": "possible-leak",
+              "sites": [
+                "alma_digital_upload.py:342",
+                "alma_digital_upload.py:344",
+                "alma_digital_upload.py:499",
+                "utils/marc_extraction.py:172",
+                "utils/marc_extraction.py:285",
+                "utils/folder_matching.py:100",
+                "utils/folder_matching.py:132",
+                "utils/folder_matching.py:266",
+                "utils/resume_helper.py:152",
+                "utils/resume_helper.py:242",
+                "utils/resume_helper.py:307",
+                "utils/resume_helper.py:360",
+                "strategies/marc_907e_strategy.py:192",
+                "strategies/marc_907e_strategy.py:217",
+                "utils/folder_renaming.py:312",
+                "utils/folder_renaming.py:410"
+              ],
+              "title": "Systemic log of raw exception str(e)"
+            },
+            {
+              "id": "G4",
+              "proposedFix": "pin botocore/boto3/urllib3 loggers to WARNING in setup_logging; consider FileHandler INFO / repo scrub filter",
+              "recommend": "fix",
+              "severity": "possible-leak",
+              "sites": [
+                "alma_digital_upload.py:399-404",
+                "alma_digital_upload.py:60-66"
+              ],
+              "title": "Log-config hardening: boto3/botocore loggers + DEBUG file handler"
+            },
+            {
+              "id": "G5",
+              "proposedFix": "write error type/code only, strip paths",
+              "recommend": "fix",
+              "severity": "possible-leak",
+              "sites": [
+                "utils/folder_renaming.py:396"
+              ],
+              "title": "Raw error text written into rename_report TSV"
+            },
+            {
+              "id": "G6",
+              "proposedFix": "document PII handling; optional column whitelist/anonymization",
+              "recommend": "defer",
+              "severity": "theoretical",
+              "sites": [
+                "utils/resume_helper.py:296",
+                "utils/folder_matching.py:260",
+                "utils/marc_extraction.py:271"
+              ],
+              "title": "Output files may pass through input PII"
+            },
+            {
+              "id": "G7",
+              "proposedFix": "none (safe)",
+              "recommend": "no-change",
+              "severity": "theoretical",
+              "sites": [
+                "alma_digital_upload.py:431"
+              ],
+              "title": "'AWS credentials loaded' info log (no values)"
+            }
+          ],
+          "groups": 7,
+          "patterns": [
+            "Never interpolate {e}/str(e) for network/cloud exceptions; log type(e).__name__ + safe id",
+            "Never serialize whole user config to a file without redaction allow/deny list",
+            "Pin boto3/botocore/urllib3 loggers to WARNING when root logger is DEBUG",
+            "Toolkit redaction (almaapitk 0.4.5) does not cover strings this repo builds from exceptions"
+          ],
+          "severityCounts": {
+            "actual-leak": 2,
+            "possible-leak": 19,
+            "theoretical": 4
+          },
+          "totalFindings": 25
+        }
+      },
+      "instructions": [
+        "For each applied fix, re-read the file:line and confirm the secret/PII is no longer emitted (removed, redacted, or replaced by safe fields).",
+        "Confirm the edits did not introduce a new output/print of sensitive data.",
+        "STRICT SECRET HANDLING: report structure only, never values.",
+        "Return per-fix resolved booleans and an overall pass."
+      ],
+      "outputFormat": "JSON: { allResolved: boolean, results: [{ id, resolved: boolean, note: string }], newIssues: [string] }",
+      "role": "Security remediation verifier",
+      "task": "Re-inspect the modified files and confirm each approved finding is resolved and no new leak was introduced."
+    }
+  },
+  "description": "Confirm each applied fix actually removes the leak and introduces no new one",
+  "io": {
+    "inputJsonPath": "tasks/01KSC71DSTJRDRFP7GZ9RQEGQS/input.json",
+    "outputJsonPath": "tasks/01KSC71DSTJRDRFP7GZ9RQEGQS/output.json"
+  },
+  "kind": "agent",
+  "labels": [
+    "reverify",
+    "verification"
+  ],
+  "title": "Re-verify fixed leak paths (attempt 1)",
+  "schemaVersion": "2026.01.tasks-v1",
+  "effectId": "01KSC71DSTJRDRFP7GZ9RQEGQS",
+  "taskId": "reverify",
+  "invocationKey": "alma-digital-upload/sensitive-data-leak-audit:S000008:reverify",
+  "stepId": "S000008",
+  "inputs": {
+    "attempt": 1,
+    "fixResult": {
+      "deferred": [
+        {
+          "id": "G6",
+          "reason": "resume_helper.py:296 TSV passthrough / folder_matching.py:260 folder names / marc_extraction.py:271 MARC TSV — data-dependent PII, not a code defect"
+        },
+        {
+          "id": "G7",
+          "reason": "alma_digital_upload.py:431 'AWS credentials loaded' info log — no secret value"
+        }
+      ],
+      "deferredCount": 4,
+      "filesModified": [
+        "alma_digital_upload.py",
+        "utils/resume_helper.py",
+        "utils/marc_extraction.py",
+        "utils/folder_matching.py",
+        "utils/folder_renaming.py",
+        "strategies/marc_907e_strategy.py"
+      ],
+      "fixedCount": 21,
+      "groupsApplied": [
+        "G1",
+        "G2",
+        "G3",
+        "G4",
+        "G5"
+      ],
+      "remainingNonEmittedExceptionText": [
+        "alma_digital_upload.py:110 raise ValueError(...{e}) — caught+sanitized by G2 at top level, never emitted raw; JSONDecodeError carries no credentials"
+      ],
+      "remainingRawExceptionEmissions": [],
+      "supplementaryHardening": [
+        "utils/marc_extraction.py:177 error=str(e)->type(e).__name__",
+        "strategies/marc_907e_strategy.py:197 error=str(e)->type(e).__name__"
+      ],
+      "traceabilityPreserved": true
+    },
+    "report": {
+      "clean": {
+        "checkedInSecrets": "none",
+        "gitHistory": "no committed secrets; rewrite not needed",
+        "reprStr": "no leaks"
+      },
+      "findings": [
+        {
+          "id": "G1",
+          "proposedFix": "redact config keys (api_key|secret|token|password|credential|authorization) before json.dump",
+          "recommend": "fix",
+          "severity": "actual-leak",
+          "sites": [
+            "utils/resume_helper.py:354"
+          ],
+          "title": "Unfiltered user-config dump to resume_config_*.json"
+        },
+        {
+          "id": "G2",
+          "proposedFix": "print type(e).__name__ only / route via sanitized logger",
+          "recommend": "fix",
+          "severity": "actual-leak",
+          "sites": [
+            "alma_digital_upload.py:662"
+          ],
+          "title": "print(f'ERROR: {e}') raw exception to stdout"
+        },
+        {
+          "id": "G3",
+          "proposedFix": "log type(e).__name__ + safe id; drop str(e) from metadata at :342",
+          "recommend": "fix",
+          "severity": "possible-leak",
+          "sites": [
+            "alma_digital_upload.py:342",
+            "alma_digital_upload.py:344",
+            "alma_digital_upload.py:499",
+            "utils/marc_extraction.py:172",
+            "utils/marc_extraction.py:285",
+            "utils/folder_matching.py:100",
+            "utils/folder_matching.py:132",
+            "utils/folder_matching.py:266",
+            "utils/resume_helper.py:152",
+            "utils/resume_helper.py:242",
+            "utils/resume_helper.py:307",
+            "utils/resume_helper.py:360",
+            "strategies/marc_907e_strategy.py:192",
+            "strategies/marc_907e_strategy.py:217",
+            "utils/folder_renaming.py:312",
+            "utils/folder_renaming.py:410"
+          ],
+          "title": "Systemic log of raw exception str(e)"
+        },
+        {
+          "id": "G4",
+          "proposedFix": "pin botocore/boto3/urllib3 loggers to WARNING in setup_logging; consider FileHandler INFO / repo scrub filter",
+          "recommend": "fix",
+          "severity": "possible-leak",
+          "sites": [
+            "alma_digital_upload.py:399-404",
+            "alma_digital_upload.py:60-66"
+          ],
+          "title": "Log-config hardening: boto3/botocore loggers + DEBUG file handler"
+        },
+        {
+          "id": "G5",
+          "proposedFix": "write error type/code only, strip paths",
+          "recommend": "fix",
+          "severity": "possible-leak",
+          "sites": [
+            "utils/folder_renaming.py:396"
+          ],
+          "title": "Raw error text written into rename_report TSV"
+        },
+        {
+          "id": "G6",
+          "proposedFix": "document PII handling; optional column whitelist/anonymization",
+          "recommend": "defer",
+          "severity": "theoretical",
+          "sites": [
+            "utils/resume_helper.py:296",
+            "utils/folder_matching.py:260",
+            "utils/marc_extraction.py:271"
+          ],
+          "title": "Output files may pass through input PII"
+        },
+        {
+          "id": "G7",
+          "proposedFix": "none (safe)",
+          "recommend": "no-change",
+          "severity": "theoretical",
+          "sites": [
+            "alma_digital_upload.py:431"
+          ],
+          "title": "'AWS credentials loaded' info log (no values)"
+        }
+      ],
+      "groups": 7,
+      "patterns": [
+        "Never interpolate {e}/str(e) for network/cloud exceptions; log type(e).__name__ + safe id",
+        "Never serialize whole user config to a file without redaction allow/deny list",
+        "Pin boto3/botocore/urllib3 loggers to WARNING when root logger is DEBUG",
+        "Toolkit redaction (almaapitk 0.4.5) does not cover strings this repo builds from exceptions"
+      ],
+      "severityCounts": {
+        "actual-leak": 2,
+        "possible-leak": 19,
+        "theoretical": 4
+      },
+      "totalFindings": 25
+    }
+  }
+}

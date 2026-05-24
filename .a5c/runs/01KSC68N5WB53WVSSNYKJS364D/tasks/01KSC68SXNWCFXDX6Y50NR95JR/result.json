@@ -1,0 +1,331 @@
+{
+  "schemaVersion": "2026.01.results-v1",
+  "effectId": "01KSC68SXNWCFXDX6Y50NR95JR",
+  "taskId": "audit-output-paths",
+  "invocationKey": "alma-digital-upload/sensitive-data-leak-audit:S000001:audit-output-paths",
+  "status": "ok",
+  "result": {
+    "findings": [
+      {
+        "category": "direct",
+        "file": "alma_digital_upload.py",
+        "line": 662,
+        "proposedFix": "redact: print exception type only, or route through logger with sanitized message",
+        "severity": "actual-leak",
+        "what": "print(f\"\\nERROR: {e}\") - raw exception to stdout",
+        "whySensitive": "Bypasses logging/redaction; exception from requests/boto3/almaapitk may include credential-bearing URL or auth detail"
+      },
+      {
+        "category": "indirect",
+        "file": "alma_digital_upload.py",
+        "line": 344,
+        "proposedFix": "log mms_id + type(e).__name__ only",
+        "severity": "possible-leak",
+        "what": "logger.error(f\"Error processing {mms_id}: {e}\")",
+        "whySensitive": "Alma API HTTPError str(e) may include URL/headers/auth detail"
+      },
+      {
+        "category": "indirect",
+        "file": "alma_digital_upload.py",
+        "line": 499,
+        "proposedFix": "log filename + type(e).__name__ only",
+        "severity": "possible-leak",
+        "what": "logger.error(f\"Upload failed for {filename}: {e}\")",
+        "whySensitive": "boto3 errors may expose AWS endpoint/bucket/auth state"
+      },
+      {
+        "category": "indirect",
+        "file": "alma_digital_upload.py",
+        "line": 431,
+        "proposedFix": "no change needed (safe)",
+        "severity": "theoretical",
+        "what": "logger.info(f\"AWS credentials loaded for {self.environment}\")",
+        "whySensitive": "Message itself safe (no values); flagged as adjacent-to-credentials practice"
+      },
+      {
+        "category": "indirect",
+        "file": "utils/folder_matching.py",
+        "line": 100,
+        "proposedFix": "log type(e).__name__ only",
+        "severity": "possible-leak",
+        "what": "logger.error(f\"Error reading TSV file: {e}\")",
+        "whySensitive": "FS error may expose paths/network shares"
+      },
+      {
+        "category": "indirect",
+        "file": "utils/folder_matching.py",
+        "line": 132,
+        "proposedFix": "log type(e).__name__ only",
+        "severity": "possible-leak",
+        "what": "logger.error(f\"Error listing folders: {e}\")",
+        "whySensitive": "FS error may expose directory structure"
+      },
+      {
+        "category": "indirect",
+        "file": "utils/folder_matching.py",
+        "line": 266,
+        "proposedFix": "log type(e).__name__ only",
+        "severity": "possible-leak",
+        "what": "logger.error(f\"Error writing report: {e}\")",
+        "whySensitive": "FS error may expose output paths"
+      },
+      {
+        "category": "indirect",
+        "file": "utils/resume_helper.py",
+        "line": 152,
+        "proposedFix": "log type(e).__name__ only",
+        "severity": "possible-leak",
+        "what": "logger.error(f\"Error reading log info: {e}\")",
+        "whySensitive": "May expose file paths"
+      },
+      {
+        "category": "indirect",
+        "file": "utils/resume_helper.py",
+        "line": 242,
+        "proposedFix": "log type(e).__name__ only",
+        "severity": "possible-leak",
+        "what": "logger.error(f\"Error extracting processed IDs: {e}\")",
+        "whySensitive": "May expose log file format/parse detail"
+      },
+      {
+        "category": "indirect",
+        "file": "utils/resume_helper.py",
+        "line": 307,
+        "proposedFix": "log type(e).__name__ only",
+        "severity": "possible-leak",
+        "what": "logger.error(f\"Error creating resume TSV: {e}\")",
+        "whySensitive": "May expose output dir structure"
+      },
+      {
+        "category": "indirect",
+        "file": "utils/resume_helper.py",
+        "line": 360,
+        "proposedFix": "log type(e).__name__ only",
+        "severity": "possible-leak",
+        "what": "logger.error(f\"Error creating resume config: {e}\")",
+        "whySensitive": "May expose file paths/config structure"
+      },
+      {
+        "category": "indirect",
+        "file": "utils/marc_extraction.py",
+        "line": 172,
+        "proposedFix": "log mms_id + type(e).__name__ only",
+        "severity": "possible-leak",
+        "what": "logger.error(f\"Error processing MMS ID {mms_id}: {e}\")",
+        "whySensitive": "Alma API error may expose auth/endpoint"
+      },
+      {
+        "category": "indirect",
+        "file": "utils/marc_extraction.py",
+        "line": 285,
+        "proposedFix": "log type(e).__name__ only",
+        "severity": "possible-leak",
+        "what": "logger.error(f\"Failed to write TSV file: {e}\")",
+        "whySensitive": "May expose file paths"
+      },
+      {
+        "category": "indirect",
+        "file": "strategies/marc_907e_strategy.py",
+        "line": 192,
+        "proposedFix": "log mms_id + type(e).__name__ only",
+        "severity": "possible-leak",
+        "what": "logger.error(f\"Error matching {mms_id}: {e}\")",
+        "whySensitive": "API/FS error detail"
+      },
+      {
+        "category": "indirect",
+        "file": "strategies/marc_907e_strategy.py",
+        "line": 217,
+        "proposedFix": "log type(e).__name__ only",
+        "severity": "possible-leak",
+        "what": "logger.error(f\"Error discovering files in {folder_path}: {e}\")",
+        "whySensitive": "May expose FS structure"
+      },
+      {
+        "category": "indirect",
+        "file": "utils/folder_renaming.py",
+        "line": 312,
+        "proposedFix": "log type(e).__name__ only",
+        "severity": "possible-leak",
+        "what": "logger.error(f\"Error renaming {candidate.old_name}: {e}\")",
+        "whySensitive": "May expose FS paths/permissions"
+      },
+      {
+        "category": "indirect",
+        "file": "utils/folder_renaming.py",
+        "line": 410,
+        "proposedFix": "log type(e).__name__ only",
+        "severity": "possible-leak",
+        "what": "logger.error(f\"Failed to write report: {e}\")",
+        "whySensitive": "May expose file paths"
+      }
+    ],
+    "notes": "Most severe: line 662 print() of raw exception to stdout (bypasses logging). Widespread pattern of logging str(e) from API/boto3/FS exceptions (16 sites). No __repr__/__str__ leaks found. almaapitk 0.4.5 redacts its own Authorization headers, but this repo can re-expose via raw exception strings.",
+    "scanned": {
+      "callSites": 194
+    }
+  },
+  "startedAt": "2026-05-24T05:13:43.065Z",
+  "finishedAt": "2026-05-24T05:13:43.065Z",
+  "value": {
+    "findings": [
+      {
+        "category": "direct",
+        "file": "alma_digital_upload.py",
+        "line": 662,
+        "proposedFix": "redact: print exception type only, or route through logger with sanitized message",
+        "severity": "actual-leak",
+        "what": "print(f\"\\nERROR: {e}\") - raw exception to stdout",
+        "whySensitive": "Bypasses logging/redaction; exception from requests/boto3/almaapitk may include credential-bearing URL or auth detail"
+      },
+      {
+        "category": "indirect",
+        "file": "alma_digital_upload.py",
+        "line": 344,
+        "proposedFix": "log mms_id + type(e).__name__ only",
+        "severity": "possible-leak",
+        "what": "logger.error(f\"Error processing {mms_id}: {e}\")",
+        "whySensitive": "Alma API HTTPError str(e) may include URL/headers/auth detail"
+      },
+      {
+        "category": "indirect",
+        "file": "alma_digital_upload.py",
+        "line": 499,
+        "proposedFix": "log filename + type(e).__name__ only",
+        "severity": "possible-leak",
+        "what": "logger.error(f\"Upload failed for {filename}: {e}\")",
+        "whySensitive": "boto3 errors may expose AWS endpoint/bucket/auth state"
+      },
+      {
+        "category": "indirect",
+        "file": "alma_digital_upload.py",
+        "line": 431,
+        "proposedFix": "no change needed (safe)",
+        "severity": "theoretical",
+        "what": "logger.info(f\"AWS credentials loaded for {self.environment}\")",
+        "whySensitive": "Message itself safe (no values); flagged as adjacent-to-credentials practice"
+      },
+      {
+        "category": "indirect",
+        "file": "utils/folder_matching.py",
+        "line": 100,
+        "proposedFix": "log type(e).__name__ only",
+        "severity": "possible-leak",
+        "what": "logger.error(f\"Error reading TSV file: {e}\")",
+        "whySensitive": "FS error may expose paths/network shares"
+      },
+      {
+        "category": "indirect",
+        "file": "utils/folder_matching.py",
+        "line": 132,
+        "proposedFix": "log type(e).__name__ only",
+        "severity": "possible-leak",
+        "what": "logger.error(f\"Error listing folders: {e}\")",
+        "whySensitive": "FS error may expose directory structure"
+      },
+      {
+        "category": "indirect",
+        "file": "utils/folder_matching.py",
+        "line": 266,
+        "proposedFix": "log type(e).__name__ only",
+        "severity": "possible-leak",
+        "what": "logger.error(f\"Error writing report: {e}\")",
+        "whySensitive": "FS error may expose output paths"
+      },
+      {
+        "category": "indirect",
+        "file": "utils/resume_helper.py",
+        "line": 152,
+        "proposedFix": "log type(e).__name__ only",
+        "severity": "possible-leak",
+        "what": "logger.error(f\"Error reading log info: {e}\")",
+        "whySensitive": "May expose file paths"
+      },
+      {
+        "category": "indirect",
+        "file": "utils/resume_helper.py",
+        "line": 242,
+        "proposedFix": "log type(e).__name__ only",
+        "severity": "possible-leak",
+        "what": "logger.error(f\"Error extracting processed IDs: {e}\")",
+        "whySensitive": "May expose log file format/parse detail"
+      },
+      {
+        "category": "indirect",
+        "file": "utils/resume_helper.py",
+        "line": 307,
+        "proposedFix": "log type(e).__name__ only",
+        "severity": "possible-leak",
+        "what": "logger.error(f\"Error creating resume TSV: {e}\")",
+        "whySensitive": "May expose output dir structure"
+      },
+      {
+        "category": "indirect",
+        "file": "utils/resume_helper.py",
+        "line": 360,
+        "proposedFix": "log type(e).__name__ only",
+        "severity": "possible-leak",
+        "what": "logger.error(f\"Error creating resume config: {e}\")",
+        "whySensitive": "May expose file paths/config structure"
+      },
+      {
+        "category": "indirect",
+        "file": "utils/marc_extraction.py",
+        "line": 172,
+        "proposedFix": "log mms_id + type(e).__name__ only",
+        "severity": "possible-leak",
+        "what": "logger.error(f\"Error processing MMS ID {mms_id}: {e}\")",
+        "whySensitive": "Alma API error may expose auth/endpoint"
+      },
+      {
+        "category": "indirect",
+        "file": "utils/marc_extraction.py",
+        "line": 285,
+        "proposedFix": "log type(e).__name__ only",
+        "severity": "possible-leak",
+        "what": "logger.error(f\"Failed to write TSV file: {e}\")",
+        "whySensitive": "May expose file paths"
+      },
+      {
+        "category": "indirect",
+        "file": "strategies/marc_907e_strategy.py",
+        "line": 192,
+        "proposedFix": "log mms_id + type(e).__name__ only",
+        "severity": "possible-leak",
+        "what": "logger.error(f\"Error matching {mms_id}: {e}\")",
+        "whySensitive": "API/FS error detail"
+      },
+      {
+        "category": "indirect",
+        "file": "strategies/marc_907e_strategy.py",
+        "line": 217,
+        "proposedFix": "log type(e).__name__ only",
+        "severity": "possible-leak",
+        "what": "logger.error(f\"Error discovering files in {folder_path}: {e}\")",
+        "whySensitive": "May expose FS structure"
+      },
+      {
+        "category": "indirect",
+        "file": "utils/folder_renaming.py",
+        "line": 312,
+        "proposedFix": "log type(e).__name__ only",
+        "severity": "possible-leak",
+        "what": "logger.error(f\"Error renaming {candidate.old_name}: {e}\")",
+        "whySensitive": "May expose FS paths/permissions"
+      },
+      {
+        "category": "indirect",
+        "file": "utils/folder_renaming.py",
+        "line": 410,
+        "proposedFix": "log type(e).__name__ only",
+        "severity": "possible-leak",
+        "what": "logger.error(f\"Failed to write report: {e}\")",
+        "whySensitive": "May expose file paths"
+      }
+    ],
+    "notes": "Most severe: line 662 print() of raw exception to stdout (bypasses logging). Widespread pattern of logging str(e) from API/boto3/FS exceptions (16 sites). No __repr__/__str__ leaks found. almaapitk 0.4.5 redacts its own Authorization headers, but this repo can re-expose via raw exception strings.",
+    "scanned": {
+      "callSites": 194
+    }
+  }
+}

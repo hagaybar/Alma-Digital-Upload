@@ -1,0 +1,26 @@
+{
+  "description": "Edit the pyproject pin, re-resolve poetry.lock, and install the new version",
+  "io": {
+    "inputJsonPath": "tasks/01KSC4CXYXYPMB0AN7JQSP8ZVA/input.json",
+    "outputJsonPath": "tasks/01KSC4CXYXYPMB0AN7JQSP8ZVA/output.json"
+  },
+  "kind": "shell",
+  "labels": [
+    "dependency",
+    "upgrade"
+  ],
+  "shell": {
+    "command": "# Orchestrator performs: edit pyproject pin (almaapitk = \">=0.3.1\" -> almaapitk = \">=0.4.5\"), then 'poetry lock' and 'poetry install', then capture locked version"
+  },
+  "title": "Bump pin to almaapitk = \">=0.4.5\" and re-resolve lock",
+  "schemaVersion": "2026.01.tasks-v1",
+  "effectId": "01KSC4CXYXYPMB0AN7JQSP8ZVA",
+  "taskId": "apply-upgrade",
+  "invocationKey": "alma-digital-upload/almaapitk-upgrade-verify:S000002:apply-upgrade",
+  "stepId": "S000002",
+  "inputs": {
+    "newPin": "almaapitk = \">=0.4.5\"",
+    "oldPin": "almaapitk = \">=0.3.1\"",
+    "targetVersion": "0.4.5"
+  }
+}

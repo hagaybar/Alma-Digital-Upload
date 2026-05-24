@@ -1,0 +1,20 @@
+{
+  "type": "EFFECT_REQUESTED",
+  "recordedAt": "2026-05-24T04:38:30.071Z",
+  "data": {
+    "harness": "claude-code",
+    "effectId": "01KSC4E1DF8QVGYA8T7WZQZ9GN",
+    "invocationKey": "alma-digital-upload/almaapitk-upgrade-verify:S000004:verify-api-surface",
+    "invocationHash": "f703571680ade5089b4909383ffbaf20f08146c151b6acf60906f678882ef133",
+    "stepId": "S000004",
+    "taskId": "verify-api-surface",
+    "kind": "agent",
+    "label": "verification",
+    "taskDefRef": "tasks/01KSC4E1DF8QVGYA8T7WZQZ9GN/task.json",
+    "labels": [
+      "verification",
+      "api-surface"
+    ]
+  },
+  "checksum": "a3a12876083268a7bbc6f4e34f8e8ee2fc3b94fd0e42e345d2c3aed60172ed53"
+}

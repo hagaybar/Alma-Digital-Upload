@@ -1,0 +1,16 @@
+{
+  "type": "RUN_CREATED",
+  "recordedAt": "2026-05-24T04:36:39.174Z",
+  "data": {
+    "runId": "01KSC4AN3C70R0BYGP06TCQ0NY",
+    "processId": "alma-digital-upload/almaapitk-upgrade-verify",
+    "entrypoint": {
+      "importPath": "../../processes/almaapitk-upgrade-verify.js",
+      "exportName": "process"
+    },
+    "harness": "claude-code",
+    "inputsRef": "inputs.json",
+    "prompt": "Upgrade almaapitk pin to >=0.4.5 (issue #1); verify repo API surface aligns under 0.4.5 offline; stop for owner approval before committing to main."
+  },
+  "checksum": "d2b13f6a0c9a48ee47799cd1a2926adc6259b6580c3c35225a1d361274973f58"
+}

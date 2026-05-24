@@ -1,0 +1,19 @@
+{
+  "schemaVersion": "2026.01.results-v1",
+  "effectId": "01KSC782Y3J2DE2XBB5G3A42YG",
+  "taskId": "post-issue-comment",
+  "invocationKey": "alma-digital-upload/sensitive-data-leak-audit:S000013:post-issue-comment",
+  "status": "ok",
+  "result": {
+    "commented": true,
+    "issue": 2,
+    "url": "https://github.com/hagaybar/Alma-Digital-Upload/issues/2#issuecomment-4527497509"
+  },
+  "startedAt": "2026-05-24T05:27:51.220Z",
+  "finishedAt": "2026-05-24T05:27:51.220Z",
+  "value": {
+    "commented": true,
+    "issue": 2,
+    "url": "https://github.com/hagaybar/Alma-Digital-Upload/issues/2#issuecomment-4527497509"
+  }
+}

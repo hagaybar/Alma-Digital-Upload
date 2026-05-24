@@ -1,0 +1,85 @@
+{
+  "schemaVersion": "2026.01.results-v1",
+  "effectId": "01KSC68SYVKGD1R1N7BFCFRGRV",
+  "taskId": "audit-config-log-history",
+  "invocationKey": "alma-digital-upload/sensitive-data-leak-audit:S000003:audit-config-log-history",
+  "status": "ok",
+  "result": {
+    "findings": [
+      {
+        "category": "boto3-loggers",
+        "file": "alma_digital_upload.py",
+        "line": "399-404",
+        "proposedFix": "change-log-level: pin logging.getLogger('botocore')/('boto3')/('urllib3') to WARNING in setup_logging()",
+        "severity": "possible-leak",
+        "what": "boto3.resource() called with explicit aws_access_key_id / aws_secret_access_key",
+        "whySensitive": "boto3/botocore loggers can emit request signing detail at DEBUG; repo sets root logger to DEBUG so a stray boto3 DEBUG could expose credential-adjacent data"
+      },
+      {
+        "category": "debug-file-handler",
+        "file": "alma_digital_upload.py",
+        "line": "60-66",
+        "proposedFix": "change-log-level: set FileHandler to INFO and/or add a repo-side logging.Filter scrubbing config dicts and exception text (overlaps file-writes:65)",
+        "severity": "theoretical",
+        "what": "Root logger DEBUG; FileHandler DEBUG -> timestamped log file; no repo-side scrubbing filter",
+        "whySensitive": "DEBUG file logs aggregate detailed records; repo relies entirely on almaapitk 0.4.5 redaction with no own filter"
+      }
+    ],
+    "historyNotes": [
+      "No actual secret values ever committed; only os.getenv() references across 7 commits",
+      "*.log gitignored; no log files in git history",
+      "historical_logs/ untracked: only metadata (MMS IDs, library/set codes), no keys",
+      "commit e894719 upgraded almaapitk to >=0.4.5 for toolkit-level Authorization redaction"
+    ],
+    "logConfig": {
+      "destinations": [
+        "{output}/alma_upload_{ts}.log",
+        "stdout INFO"
+      ],
+      "filters": "none repo-side; relies on almaapitk 0.4.5 TextFormatter for Authorization redaction",
+      "level": "root DEBUG; file_handler DEBUG; console_handler INFO",
+      "redactionHolds": false
+    },
+    "notes": "Section 4 CLEAN: no .env; config.example.json placeholders only; all creds from env vars (ALMA_*_API_KEY, AWS_ACCESS_KEY, AWS_SECRET, *_BUCKET_NAME). Section 5: DEBUG file logging with no repo-side scrub filter -> redactionHolds=false (repo-side); boto3 keys passed explicitly. Section 7 CLEAN: no committed secrets, history rewrite not needed."
+  },
+  "startedAt": "2026-05-24T05:14:05.426Z",
+  "finishedAt": "2026-05-24T05:14:05.426Z",
+  "value": {
+    "findings": [
+      {
+        "category": "boto3-loggers",
+        "file": "alma_digital_upload.py",
+        "line": "399-404",
+        "proposedFix": "change-log-level: pin logging.getLogger('botocore')/('boto3')/('urllib3') to WARNING in setup_logging()",
+        "severity": "possible-leak",
+        "what": "boto3.resource() called with explicit aws_access_key_id / aws_secret_access_key",
+        "whySensitive": "boto3/botocore loggers can emit request signing detail at DEBUG; repo sets root logger to DEBUG so a stray boto3 DEBUG could expose credential-adjacent data"
+      },
+      {
+        "category": "debug-file-handler",
+        "file": "alma_digital_upload.py",
+        "line": "60-66",
+        "proposedFix": "change-log-level: set FileHandler to INFO and/or add a repo-side logging.Filter scrubbing config dicts and exception text (overlaps file-writes:65)",
+        "severity": "theoretical",
+        "what": "Root logger DEBUG; FileHandler DEBUG -> timestamped log file; no repo-side scrubbing filter",
+        "whySensitive": "DEBUG file logs aggregate detailed records; repo relies entirely on almaapitk 0.4.5 redaction with no own filter"
+      }
+    ],
+    "historyNotes": [
+      "No actual secret values ever committed; only os.getenv() references across 7 commits",
+      "*.log gitignored; no log files in git history",
+      "historical_logs/ untracked: only metadata (MMS IDs, library/set codes), no keys",
+      "commit e894719 upgraded almaapitk to >=0.4.5 for toolkit-level Authorization redaction"
+    ],
+    "logConfig": {
+      "destinations": [
+        "{output}/alma_upload_{ts}.log",
+        "stdout INFO"
+      ],
+      "filters": "none repo-side; relies on almaapitk 0.4.5 TextFormatter for Authorization redaction",
+      "level": "root DEBUG; file_handler DEBUG; console_handler INFO",
+      "redactionHolds": false
+    },
+    "notes": "Section 4 CLEAN: no .env; config.example.json placeholders only; all creds from env vars (ALMA_*_API_KEY, AWS_ACCESS_KEY, AWS_SECRET, *_BUCKET_NAME). Section 5: DEBUG file logging with no repo-side scrub filter -> redactionHolds=false (repo-side); boto3 keys passed explicitly. Section 7 CLEAN: no committed secrets, history rewrite not needed."
+  }
+}

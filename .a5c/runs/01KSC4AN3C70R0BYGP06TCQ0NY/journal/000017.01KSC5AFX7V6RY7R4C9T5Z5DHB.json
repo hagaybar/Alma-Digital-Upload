@@ -1,0 +1,20 @@
+{
+  "type": "EFFECT_REQUESTED",
+  "recordedAt": "2026-05-24T04:54:02.407Z",
+  "data": {
+    "harness": "claude-code",
+    "effectId": "01KSC5AFWTQ4TDRZTE97TDQVR7",
+    "invocationKey": "alma-digital-upload/almaapitk-upgrade-verify:S000008:commit",
+    "invocationHash": "6e35b1d93ddd2c6ef90cb13fbe75569af3e728e0149e68de3317d2eaa3cfc0c1",
+    "stepId": "S000008",
+    "taskId": "commit",
+    "kind": "shell",
+    "label": "git",
+    "taskDefRef": "tasks/01KSC5AFWTQ4TDRZTE97TDQVR7/task.json",
+    "labels": [
+      "git",
+      "commit"
+    ]
+  },
+  "checksum": "520ed911bcabbe84116739b717b1fd94fbf26c013398829fe335773d241fff2e"
+}

@@ -1,0 +1,1 @@
+{"passed": true, "summary": "25 passed in ~5s", "command": "poetry run pytest -q", "exitCode": 0, "compileOk": true}

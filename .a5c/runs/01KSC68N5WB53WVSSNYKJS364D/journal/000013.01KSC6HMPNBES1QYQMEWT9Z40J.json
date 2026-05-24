@@ -1,0 +1,19 @@
+{
+  "type": "EFFECT_REQUESTED",
+  "recordedAt": "2026-05-24T05:15:25.269Z",
+  "data": {
+    "harness": "claude-code",
+    "effectId": "01KSC6HMP944YFJHARK3RZMJAS",
+    "invocationKey": "alma-digital-upload/sensitive-data-leak-audit:S000005:__sdk.breakpoint",
+    "invocationHash": "d90f3ea1cefd959def791fda0072c03566284cfb155c845c0000c643026cd1ac",
+    "stepId": "S000005",
+    "taskId": "__sdk.breakpoint",
+    "kind": "breakpoint",
+    "label": "breakpoint",
+    "taskDefRef": "tasks/01KSC6HMP944YFJHARK3RZMJAS/task.json",
+    "labels": [
+      "breakpoint"
+    ]
+  },
+  "checksum": "eb64ddfc72b7468cd78a1bf332e8d1125bacb63e2a939dae914042cec1a35144"
+}

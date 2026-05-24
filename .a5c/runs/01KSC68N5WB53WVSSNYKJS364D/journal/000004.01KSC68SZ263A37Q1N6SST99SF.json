@@ -1,0 +1,22 @@
+{
+  "type": "EFFECT_REQUESTED",
+  "recordedAt": "2026-05-24T05:10:35.746Z",
+  "data": {
+    "harness": "claude-code",
+    "effectId": "01KSC68SYVKGD1R1N7BFCFRGRV",
+    "invocationKey": "alma-digital-upload/sensitive-data-leak-audit:S000003:audit-config-log-history",
+    "invocationHash": "c5130b1d54df56ace22363317cee69ad4e17321e371ec6da08b1dce681025963",
+    "stepId": "S000003",
+    "taskId": "audit-config-log-history",
+    "kind": "agent",
+    "label": "audit",
+    "taskDefRef": "tasks/01KSC68SYVKGD1R1N7BFCFRGRV/task.json",
+    "labels": [
+      "audit",
+      "config",
+      "log-config",
+      "history"
+    ]
+  },
+  "checksum": "299386bef089b3fd83566daa4e4620dacd8128c699e92cacb8d53967749c1365"
+}

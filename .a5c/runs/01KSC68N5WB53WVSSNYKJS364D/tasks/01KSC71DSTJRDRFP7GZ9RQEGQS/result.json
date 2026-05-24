@@ -1,0 +1,87 @@
+{
+  "schemaVersion": "2026.01.results-v1",
+  "effectId": "01KSC71DSTJRDRFP7GZ9RQEGQS",
+  "taskId": "reverify",
+  "invocationKey": "alma-digital-upload/sensitive-data-leak-audit:S000008:reverify",
+  "status": "ok",
+  "result": {
+    "allResolved": true,
+    "compileOk": true,
+    "emissionGrep": "EMISSIONS_NONE",
+    "newIssues": [],
+    "note": "Only remaining {e} is alma_digital_upload.py:110 re-raise, caught+sanitized at top level (not an emission). Traceability preserved across all edits.",
+    "results": [
+      {
+        "id": "G1",
+        "note": "_redact_config() defined (resume_helper.py:28) and applied at json.dump (line 382)",
+        "resolved": true
+      },
+      {
+        "id": "G2",
+        "note": "stdout print emits type(e).__name__ only",
+        "resolved": true
+      },
+      {
+        "id": "G3",
+        "note": "all 16 sites log type(e).__name__ with identifier preserved; metadata stores type name",
+        "resolved": true
+      },
+      {
+        "id": "G4",
+        "note": "botocore/boto3/urllib3 pinned to WARNING (lines 82-84); app DEBUG intact",
+        "resolved": true
+      },
+      {
+        "id": "G5",
+        "note": "rename_report TSV writes sanitized error category; identifiers intact",
+        "resolved": true
+      },
+      {
+        "id": "supplementary",
+        "note": "ExtractionResult.error and MatchResult.error now store type(e).__name__",
+        "resolved": true
+      }
+    ]
+  },
+  "startedAt": "2026-05-24T05:24:34.834Z",
+  "finishedAt": "2026-05-24T05:24:34.834Z",
+  "value": {
+    "allResolved": true,
+    "compileOk": true,
+    "emissionGrep": "EMISSIONS_NONE",
+    "newIssues": [],
+    "note": "Only remaining {e} is alma_digital_upload.py:110 re-raise, caught+sanitized at top level (not an emission). Traceability preserved across all edits.",
+    "results": [
+      {
+        "id": "G1",
+        "note": "_redact_config() defined (resume_helper.py:28) and applied at json.dump (line 382)",
+        "resolved": true
+      },
+      {
+        "id": "G2",
+        "note": "stdout print emits type(e).__name__ only",
+        "resolved": true
+      },
+      {
+        "id": "G3",
+        "note": "all 16 sites log type(e).__name__ with identifier preserved; metadata stores type name",
+        "resolved": true
+      },
+      {
+        "id": "G4",
+        "note": "botocore/boto3/urllib3 pinned to WARNING (lines 82-84); app DEBUG intact",
+        "resolved": true
+      },
+      {
+        "id": "G5",
+        "note": "rename_report TSV writes sanitized error category; identifiers intact",
+        "resolved": true
+      },
+      {
+        "id": "supplementary",
+        "note": "ExtractionResult.error and MatchResult.error now store type(e).__name__",
+        "resolved": true
+      }
+    ]
+  }
+}

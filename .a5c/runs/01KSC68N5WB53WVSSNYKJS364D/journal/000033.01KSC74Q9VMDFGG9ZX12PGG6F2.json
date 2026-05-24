@@ -1,0 +1,20 @@
+{
+  "type": "EFFECT_REQUESTED",
+  "recordedAt": "2026-05-24T05:25:50.523Z",
+  "data": {
+    "harness": "claude-code",
+    "effectId": "01KSC74Q9E47NHNX8X4FQPSFD2",
+    "invocationKey": "alma-digital-upload/sensitive-data-leak-audit:S000011:commit",
+    "invocationHash": "45f1c274bcb0ebc4d4d790454c784a35d3db937d47a45053119a89cc54a88231",
+    "stepId": "S000011",
+    "taskId": "commit",
+    "kind": "shell",
+    "label": "git",
+    "taskDefRef": "tasks/01KSC74Q9E47NHNX8X4FQPSFD2/task.json",
+    "labels": [
+      "git",
+      "commit"
+    ]
+  },
+  "checksum": "de299ae468f576e1dbec077878b4618192e30b658674cc0d36c823f0c4ed0b94"
+}

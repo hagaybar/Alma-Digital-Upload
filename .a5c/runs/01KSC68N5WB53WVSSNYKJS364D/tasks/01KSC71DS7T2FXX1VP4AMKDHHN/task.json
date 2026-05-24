@@ -1,0 +1,24 @@
+{
+  "description": "Run pytest to confirm fixes did not break anything",
+  "io": {
+    "inputJsonPath": "tasks/01KSC71DS7T2FXX1VP4AMKDHHN/input.json",
+    "outputJsonPath": "tasks/01KSC71DS7T2FXX1VP4AMKDHHN/output.json"
+  },
+  "kind": "shell",
+  "labels": [
+    "tests",
+    "verification"
+  ],
+  "shell": {
+    "command": "poetry run pytest -q"
+  },
+  "title": "Run test suite (attempt 1)",
+  "schemaVersion": "2026.01.tasks-v1",
+  "effectId": "01KSC71DS7T2FXX1VP4AMKDHHN",
+  "taskId": "run-tests",
+  "invocationKey": "alma-digital-upload/sensitive-data-leak-audit:S000007:run-tests",
+  "stepId": "S000007",
+  "inputs": {
+    "attempt": 1
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "schemaVersion": "2026.01.results-v1",
+  "effectId": "01KSC4E1DYTFB37XCD9ER3KV49",
+  "taskId": "verify-redaction",
+  "invocationKey": "alma-digital-upload/almaapitk-upgrade-verify:S000005:verify-redaction",
+  "status": "ok",
+  "result": {
+    "checks": {
+      "helper_has_redacted_marker": true,
+      "helper_leaks_key": false,
+      "jsonformatter_leaks_key": false,
+      "textformatter_leaks_key": false
+    },
+    "evidence": "TextFormatter DEBUG output rendered: (headers={'Authorization': '***REDACTED***'}); fake key never appeared in TextFormatter, JSONFormatter, or redact_sensitive_data output",
+    "note": "No real API calls, no real credentials; fake key used.",
+    "offline": true,
+    "passed": true
+  },
+  "startedAt": "2026-05-24T04:39:36.823Z",
+  "finishedAt": "2026-05-24T04:39:36.823Z",
+  "value": {
+    "checks": {
+      "helper_has_redacted_marker": true,
+      "helper_leaks_key": false,
+      "jsonformatter_leaks_key": false,
+      "textformatter_leaks_key": false
+    },
+    "evidence": "TextFormatter DEBUG output rendered: (headers={'Authorization': '***REDACTED***'}); fake key never appeared in TextFormatter, JSONFormatter, or redact_sensitive_data output",
+    "note": "No real API calls, no real credentials; fake key used.",
+    "offline": true,
+    "passed": true
+  }
+}

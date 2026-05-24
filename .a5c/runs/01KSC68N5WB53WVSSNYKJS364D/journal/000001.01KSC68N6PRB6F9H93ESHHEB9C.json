@@ -1,0 +1,16 @@
+{
+  "type": "RUN_CREATED",
+  "recordedAt": "2026-05-24T05:10:30.870Z",
+  "data": {
+    "runId": "01KSC68N5WB53WVSSNYKJS364D",
+    "processId": "alma-digital-upload/sensitive-data-leak-audit",
+    "entrypoint": {
+      "importPath": "../../processes/sensitive-data-leak-audit.js",
+      "exportName": "process"
+    },
+    "harness": "claude-code",
+    "inputsRef": "inputs.json",
+    "prompt": "Issue #2 security audit: find sensitive-data leaks to terminal/logs/files; produce findings report first (no changes), stop for owner review, then apply approved fixes, verify, commit, and post summary comment. Strict secret-handling; main branch only."
+  },
+  "checksum": "78ff27e6e7171b57f52f4c643593150da7e7cb89b1a688569a9b325eabea592a"
+}

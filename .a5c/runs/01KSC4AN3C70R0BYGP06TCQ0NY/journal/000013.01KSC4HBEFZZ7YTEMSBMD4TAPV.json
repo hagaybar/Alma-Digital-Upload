@@ -1,0 +1,20 @@
+{
+  "type": "EFFECT_REQUESTED",
+  "recordedAt": "2026-05-24T04:40:18.639Z",
+  "data": {
+    "harness": "claude-code",
+    "effectId": "01KSC4HBE1PTHJTBSZ9T804D3Y",
+    "invocationKey": "alma-digital-upload/almaapitk-upgrade-verify:S000006:compatibility-review",
+    "invocationHash": "19a34b0e61477a44684fcd17e1cd52fe61a07147eec1ba0fd370e7f412b92c89",
+    "stepId": "S000006",
+    "taskId": "compatibility-review",
+    "kind": "agent",
+    "label": "verification",
+    "taskDefRef": "tasks/01KSC4HBE1PTHJTBSZ9T804D3Y/task.json",
+    "labels": [
+      "verification",
+      "review"
+    ]
+  },
+  "checksum": "0337bc8ef6cba9b5fcdb48e134dd8fc157717f74f34dc3d68c32adbd1ecc6fc2"
+}

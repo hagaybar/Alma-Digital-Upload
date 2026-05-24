@@ -1,0 +1,16 @@
+{
+  "symbols": [
+    {"symbol": "almaapitk.AlmaAPIClient", "kind": "class", "calledAs": "AlmaAPIClient(environment)", "locations": ["alma_digital_upload.py:37", "alma_digital_upload.py:185"]},
+    {"symbol": "almaapitk.Admin", "kind": "class", "calledAs": "Admin(client)", "locations": ["alma_digital_upload.py:37", "alma_digital_upload.py:190"]},
+    {"symbol": "almaapitk.BibliographicRecords", "kind": "class", "calledAs": "BibliographicRecords(client)", "locations": ["alma_digital_upload.py:37", "alma_digital_upload.py:191"]},
+    {"symbol": "AlmaAPIClient.test_connection", "kind": "method", "calledAs": "alma_client.test_connection()", "locations": ["alma_digital_upload.py:187"]},
+    {"symbol": "Admin.get_set_info", "kind": "method", "calledAs": "admin.get_set_info(set_id)", "locations": ["alma_digital_upload.py:206"]},
+    {"symbol": "Admin.get_bib_set_members", "kind": "method", "calledAs": "admin.get_bib_set_members(set_id)", "locations": ["alma_digital_upload.py:219"]},
+    {"symbol": "BibliographicRecords.get_representations", "kind": "method", "calledAs": "bibs.get_representations(mms_id)", "locations": ["alma_digital_upload.py:285"]},
+    {"symbol": "BibliographicRecords.create_representation", "kind": "method", "calledAs": "bibs.create_representation(mms_id=, access_rights_value=, access_rights_desc=, lib_code=, usage_type=)", "locations": ["alma_digital_upload.py:314"]},
+    {"symbol": "BibliographicRecords.link_file_to_representation", "kind": "method", "calledAs": "bibs.link_file_to_representation(mms_id=, representation_id=, file_path=)", "locations": ["alma_digital_upload.py:481"]},
+    {"symbol": "BibliographicRecords.get_marc_subfield", "kind": "method", "calledAs": "bibs_client.get_marc_subfield(mms_id, field, subfield)", "locations": ["strategies/marc_907e_strategy.py:114", "utils/marc_extraction.py:81", "utils/marc_extraction.py:82"]}
+  ],
+  "loggingUsage": [],
+  "notes": "No direct usage of almaapitk logging internals (TextFormatter, JSONFormatter, redact_sensitive_data, alma_logging). Project uses stdlib logging. All almaapitk usage in alma_digital_upload.py plus BibliographicRecords.get_marc_subfield invoked from strategies/utils."
+}

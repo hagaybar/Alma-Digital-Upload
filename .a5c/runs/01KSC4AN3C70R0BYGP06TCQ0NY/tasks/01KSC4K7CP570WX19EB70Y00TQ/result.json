@@ -1,0 +1,17 @@
+{
+  "schemaVersion": "2026.01.results-v1",
+  "effectId": "01KSC4K7CP570WX19EB70Y00TQ",
+  "taskId": "__sdk.breakpoint",
+  "invocationKey": "alma-digital-upload/almaapitk-upgrade-verify:S000007:__sdk.breakpoint",
+  "status": "ok",
+  "result": {
+    "approved": true,
+    "response": "Approve commit to main"
+  },
+  "startedAt": "2026-05-24T04:53:57.972Z",
+  "finishedAt": "2026-05-24T04:53:57.972Z",
+  "value": {
+    "approved": true,
+    "response": "Approve commit to main"
+  }
+}

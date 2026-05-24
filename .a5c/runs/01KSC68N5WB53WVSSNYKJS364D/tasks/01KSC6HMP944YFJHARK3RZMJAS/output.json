@@ -1,0 +1,1 @@
+{"approved": true, "response": "Fix all issues (G1-G5; defer G6, no-change G7). HARD CONSTRAINT: preserve error traceability — AWS/Alma error logs must still identify the specific file/record/MMS-ID/bib-id. Strip only the raw exception text/credentials; keep the safe identifier and add type(e).__name__."}

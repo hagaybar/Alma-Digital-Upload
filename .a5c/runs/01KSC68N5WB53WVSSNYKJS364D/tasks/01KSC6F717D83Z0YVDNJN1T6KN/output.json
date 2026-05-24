@@ -1,0 +1,21 @@
+{
+  "totalFindings": 25,
+  "severityCounts": {"actual-leak": 2, "possible-leak": 19, "theoretical": 4},
+  "groups": 7,
+  "findings": [
+    {"id": "G1", "title": "Unfiltered user-config dump to resume_config_*.json", "severity": "actual-leak", "sites": ["utils/resume_helper.py:354"], "proposedFix": "redact config keys (api_key|secret|token|password|credential|authorization) before json.dump", "recommend": "fix"},
+    {"id": "G2", "title": "print(f'ERROR: {e}') raw exception to stdout", "severity": "actual-leak", "sites": ["alma_digital_upload.py:662"], "proposedFix": "print type(e).__name__ only / route via sanitized logger", "recommend": "fix"},
+    {"id": "G3", "title": "Systemic log of raw exception str(e)", "severity": "possible-leak", "sites": ["alma_digital_upload.py:342", "alma_digital_upload.py:344", "alma_digital_upload.py:499", "utils/marc_extraction.py:172", "utils/marc_extraction.py:285", "utils/folder_matching.py:100", "utils/folder_matching.py:132", "utils/folder_matching.py:266", "utils/resume_helper.py:152", "utils/resume_helper.py:242", "utils/resume_helper.py:307", "utils/resume_helper.py:360", "strategies/marc_907e_strategy.py:192", "strategies/marc_907e_strategy.py:217", "utils/folder_renaming.py:312", "utils/folder_renaming.py:410"], "proposedFix": "log type(e).__name__ + safe id; drop str(e) from metadata at :342", "recommend": "fix"},
+    {"id": "G4", "title": "Log-config hardening: boto3/botocore loggers + DEBUG file handler", "severity": "possible-leak", "sites": ["alma_digital_upload.py:399-404", "alma_digital_upload.py:60-66"], "proposedFix": "pin botocore/boto3/urllib3 loggers to WARNING in setup_logging; consider FileHandler INFO / repo scrub filter", "recommend": "fix"},
+    {"id": "G5", "title": "Raw error text written into rename_report TSV", "severity": "possible-leak", "sites": ["utils/folder_renaming.py:396"], "proposedFix": "write error type/code only, strip paths", "recommend": "fix"},
+    {"id": "G6", "title": "Output files may pass through input PII", "severity": "theoretical", "sites": ["utils/resume_helper.py:296", "utils/folder_matching.py:260", "utils/marc_extraction.py:271"], "proposedFix": "document PII handling; optional column whitelist/anonymization", "recommend": "defer"},
+    {"id": "G7", "title": "'AWS credentials loaded' info log (no values)", "severity": "theoretical", "sites": ["alma_digital_upload.py:431"], "proposedFix": "none (safe)", "recommend": "no-change"}
+  ],
+  "patterns": [
+    "Never interpolate {e}/str(e) for network/cloud exceptions; log type(e).__name__ + safe id",
+    "Never serialize whole user config to a file without redaction allow/deny list",
+    "Pin boto3/botocore/urllib3 loggers to WARNING when root logger is DEBUG",
+    "Toolkit redaction (almaapitk 0.4.5) does not cover strings this repo builds from exceptions"
+  ],
+  "clean": {"checkedInSecrets": "none", "gitHistory": "no committed secrets; rewrite not needed", "reprStr": "no leaks"}
+}

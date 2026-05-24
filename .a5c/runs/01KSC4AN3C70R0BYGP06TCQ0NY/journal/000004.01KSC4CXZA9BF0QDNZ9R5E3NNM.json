@@ -1,0 +1,20 @@
+{
+  "type": "EFFECT_REQUESTED",
+  "recordedAt": "2026-05-24T04:37:53.770Z",
+  "data": {
+    "harness": "claude-code",
+    "effectId": "01KSC4CXYXYPMB0AN7JQSP8ZVA",
+    "invocationKey": "alma-digital-upload/almaapitk-upgrade-verify:S000002:apply-upgrade",
+    "invocationHash": "c54133bc6dfe9cbd18bcf413dbdaddddc12a54362cfd0779fbd76fbb686d4e72",
+    "stepId": "S000002",
+    "taskId": "apply-upgrade",
+    "kind": "shell",
+    "label": "upgrade",
+    "taskDefRef": "tasks/01KSC4CXYXYPMB0AN7JQSP8ZVA/task.json",
+    "labels": [
+      "upgrade",
+      "dependency"
+    ]
+  },
+  "checksum": "a78306b332dc16ba4f9657ec01bc73b70ba9a727757bd928b9ef31d3c2f8a3d5"
+}

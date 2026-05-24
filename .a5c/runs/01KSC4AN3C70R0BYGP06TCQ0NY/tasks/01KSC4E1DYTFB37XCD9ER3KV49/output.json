@@ -1,0 +1,7 @@
+{
+  "passed": true,
+  "offline": true,
+  "checks": {"helper_leaks_key": false, "helper_has_redacted_marker": true, "textformatter_leaks_key": false, "jsonformatter_leaks_key": false},
+  "evidence": "TextFormatter DEBUG output rendered: (headers={'Authorization': '***REDACTED***'}); fake key never appeared in TextFormatter, JSONFormatter, or redact_sensitive_data output",
+  "note": "No real API calls, no real credentials; fake key used."
+}

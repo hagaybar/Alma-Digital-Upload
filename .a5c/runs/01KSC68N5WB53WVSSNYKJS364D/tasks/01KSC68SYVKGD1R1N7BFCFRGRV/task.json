@@ -1,0 +1,63 @@
+{
+  "agent": {
+    "name": "general-purpose",
+    "outputSchema": {
+      "properties": {
+        "findings": {
+          "items": {
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "notes": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "findings"
+      ],
+      "type": "object"
+    },
+    "prompt": {
+      "context": {
+        "checklistSections": [
+          4,
+          5,
+          7
+        ],
+        "projectRoot": "."
+      },
+      "instructions": [
+        "Section 4 — config & fixtures: check .env / .env.example / .env.local, config/, settings, *.yaml/*.toml/*.json, tests/fixtures, tests/data, docs/, README, examples/ for hardcoded or example credentials. STRICT: to decide if a value is a real secret, use shape/length heuristics and structural patterns — do NOT cat secret files or print values. For .env-style files, report only whether credential-shaped assignments exist (names + redacted), never the values.",
+        "Section 5 — log configuration: find where logging is configured (level, handlers, formatters, filters), where logs go (file/stdout/both), and whether DEBUG could be active on auth-handling paths. Note that almaapitk 0.4.5 now redacts Authorization in its formatters; verify this repo does not re-expose it. Confirm any existing redaction/scrubbing actually covers the patterns this repo uses.",
+        "Section 7 — git history (lightweight): run `git log --all -p -S api_key -- \"*.py\" | head -100` and the same for token/secret/password; note whether credentials ever appeared and were later removed (history rewrite is OUT OF SCOPE — just record). Report redacted/structural notes only.",
+        "STRICT SECRET HANDLING applies throughout: never emit secret values to output.",
+        "Do NOT modify any files. Audit-only."
+      ],
+      "outputFormat": "JSON: { findings: [{ file, line, category, what, whySensitive, severity, proposedFix }], logConfig: { level, destinations, filters, redactionHolds: boolean }, historyNotes: [string], notes: string }",
+      "role": "Application security auditor (data-leak focus)",
+      "task": "Audit configuration/fixtures for checked-in secrets, review logging configuration, and do a lightweight git-history credential scan."
+    }
+  },
+  "description": "Issue #2 checklist sections 4, 5, 7 — checked-in secrets, log config/level/filters, lightweight history scan",
+  "io": {
+    "inputJsonPath": "tasks/01KSC68SYVKGD1R1N7BFCFRGRV/input.json",
+    "outputJsonPath": "tasks/01KSC68SYVKGD1R1N7BFCFRGRV/output.json"
+  },
+  "kind": "agent",
+  "labels": [
+    "audit",
+    "config",
+    "history",
+    "log-config"
+  ],
+  "title": "Audit config/fixtures, log configuration, and git history",
+  "schemaVersion": "2026.01.tasks-v1",
+  "effectId": "01KSC68SYVKGD1R1N7BFCFRGRV",
+  "taskId": "audit-config-log-history",
+  "invocationKey": "alma-digital-upload/sensitive-data-leak-audit:S000003:audit-config-log-history",
+  "stepId": "S000003",
+  "inputs": {
+    "projectRoot": "."
+  }
+}

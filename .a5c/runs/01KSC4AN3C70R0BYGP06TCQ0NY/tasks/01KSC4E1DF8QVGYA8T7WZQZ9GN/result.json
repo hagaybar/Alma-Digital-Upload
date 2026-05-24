@@ -1,0 +1,141 @@
+{
+  "schemaVersion": "2026.01.results-v1",
+  "effectId": "01KSC4E1DF8QVGYA8T7WZQZ9GN",
+  "taskId": "verify-api-surface",
+  "invocationKey": "alma-digital-upload/almaapitk-upgrade-verify:S000004:verify-api-surface",
+  "status": "ok",
+  "result": {
+    "aligned": true,
+    "breaking": [],
+    "results": [
+      {
+        "note": "__init__(self, environment='SANDBOX', *, max_retries=3, backoff_factor=1.0, retry=None, timeout=None, region='EU', host=None). One positional 'environment' accepted; others keyword-only with defaults, none newly required.",
+        "present": true,
+        "signatureMatch": true,
+        "symbol": "almaapitk.AlmaAPIClient"
+      },
+      {
+        "note": "(self) -> bool. No args.",
+        "present": true,
+        "signatureMatch": true,
+        "symbol": "AlmaAPIClient.test_connection()"
+      },
+      {
+        "note": "__init__(self, client). One positional client, required.",
+        "present": true,
+        "signatureMatch": true,
+        "symbol": "almaapitk.Admin"
+      },
+      {
+        "note": "(self, set_id: str) -> Dict. Positional accepted.",
+        "present": true,
+        "signatureMatch": true,
+        "symbol": "Admin.get_set_info(set_id)"
+      },
+      {
+        "note": "(self, set_id: str) -> List[str]. Positional accepted.",
+        "present": true,
+        "signatureMatch": true,
+        "symbol": "Admin.get_bib_set_members(set_id)"
+      },
+      {
+        "note": "__init__(self, client). One positional client, required.",
+        "present": true,
+        "signatureMatch": true,
+        "symbol": "almaapitk.BibliographicRecords"
+      },
+      {
+        "note": "(self, mms_id, representation_id=None). mms_id positional accepted.",
+        "present": true,
+        "signatureMatch": true,
+        "symbol": "BibliographicRecords.get_representations(mms_id)"
+      },
+      {
+        "note": "(self, mms_id, access_rights_value, access_rights_desc, lib_code, usage_type='PRESERVATION_MASTER'). All 5 keyword names exist; usage_type now has a default but still accepts the keyword; no newly-required param.",
+        "present": true,
+        "signatureMatch": true,
+        "symbol": "BibliographicRecords.create_representation(...)"
+      },
+      {
+        "note": "(self, mms_id, representation_id, file_path). All 3 keyword names exist, all supplied.",
+        "present": true,
+        "signatureMatch": true,
+        "symbol": "BibliographicRecords.link_file_to_representation(...)"
+      },
+      {
+        "note": "(self, mms_id, field, subfield) -> List[str]. All positional accepted.",
+        "present": true,
+        "signatureMatch": true,
+        "symbol": "BibliographicRecords.get_marc_subfield(mms_id, field, subfield)"
+      }
+    ]
+  },
+  "startedAt": "2026-05-24T04:40:14.309Z",
+  "finishedAt": "2026-05-24T04:40:14.309Z",
+  "value": {
+    "aligned": true,
+    "breaking": [],
+    "results": [
+      {
+        "note": "__init__(self, environment='SANDBOX', *, max_retries=3, backoff_factor=1.0, retry=None, timeout=None, region='EU', host=None). One positional 'environment' accepted; others keyword-only with defaults, none newly required.",
+        "present": true,
+        "signatureMatch": true,
+        "symbol": "almaapitk.AlmaAPIClient"
+      },
+      {
+        "note": "(self) -> bool. No args.",
+        "present": true,
+        "signatureMatch": true,
+        "symbol": "AlmaAPIClient.test_connection()"
+      },
+      {
+        "note": "__init__(self, client). One positional client, required.",
+        "present": true,
+        "signatureMatch": true,
+        "symbol": "almaapitk.Admin"
+      },
+      {
+        "note": "(self, set_id: str) -> Dict. Positional accepted.",
+        "present": true,
+        "signatureMatch": true,
+        "symbol": "Admin.get_set_info(set_id)"
+      },
+      {
+        "note": "(self, set_id: str) -> List[str]. Positional accepted.",
+        "present": true,
+        "signatureMatch": true,
+        "symbol": "Admin.get_bib_set_members(set_id)"
+      },
+      {
+        "note": "__init__(self, client). One positional client, required.",
+        "present": true,
+        "signatureMatch": true,
+        "symbol": "almaapitk.BibliographicRecords"
+      },
+      {
+        "note": "(self, mms_id, representation_id=None). mms_id positional accepted.",
+        "present": true,
+        "signatureMatch": true,
+        "symbol": "BibliographicRecords.get_representations(mms_id)"
+      },
+      {
+        "note": "(self, mms_id, access_rights_value, access_rights_desc, lib_code, usage_type='PRESERVATION_MASTER'). All 5 keyword names exist; usage_type now has a default but still accepts the keyword; no newly-required param.",
+        "present": true,
+        "signatureMatch": true,
+        "symbol": "BibliographicRecords.create_representation(...)"
+      },
+      {
+        "note": "(self, mms_id, representation_id, file_path). All 3 keyword names exist, all supplied.",
+        "present": true,
+        "signatureMatch": true,
+        "symbol": "BibliographicRecords.link_file_to_representation(...)"
+      },
+      {
+        "note": "(self, mms_id, field, subfield) -> List[str]. All positional accepted.",
+        "present": true,
+        "signatureMatch": true,
+        "symbol": "BibliographicRecords.get_marc_subfield(mms_id, field, subfield)"
+      }
+    ]
+  }
+}

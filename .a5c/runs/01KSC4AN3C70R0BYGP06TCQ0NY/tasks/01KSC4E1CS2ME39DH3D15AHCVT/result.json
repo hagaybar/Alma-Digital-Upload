@@ -1,0 +1,21 @@
+{
+  "schemaVersion": "2026.01.results-v1",
+  "effectId": "01KSC4E1CS2ME39DH3D15AHCVT",
+  "taskId": "run-tests",
+  "invocationKey": "alma-digital-upload/almaapitk-upgrade-verify:S000003:run-tests",
+  "status": "ok",
+  "result": {
+    "command": "poetry run pytest -q",
+    "exitCode": 0,
+    "passed": true,
+    "summary": "25 passed in ~5s"
+  },
+  "startedAt": "2026-05-24T04:39:36.640Z",
+  "finishedAt": "2026-05-24T04:39:36.640Z",
+  "value": {
+    "command": "poetry run pytest -q",
+    "exitCode": 0,
+    "passed": true,
+    "summary": "25 passed in ~5s"
+  }
+}

@@ -1,0 +1,277 @@
+diff --git a/alma_digital_upload.py b/alma_digital_upload.py
+index 8b3cab6..98675fe 100644
+--- a/alma_digital_upload.py
++++ b/alma_digital_upload.py
+@@ -77,6 +77,12 @@ def setup_logging(output_dir: str, prefix: str = "alma_upload") -> logging.Logge
+     logger.addHandler(file_handler)
+     logger.addHandler(console_handler)
+ 
++    # Pin noisy/secret-bearing third-party loggers to WARNING so AWS SDK
++    # debug output (which can include credential material) is not captured.
++    logging.getLogger("botocore").setLevel(logging.WARNING)
++    logging.getLogger("boto3").setLevel(logging.WARNING)
++    logging.getLogger("urllib3").setLevel(logging.WARNING)
++
+     logger.info(f"Logging initialized - Log file: {log_file}")
+     return logger
+ 
+@@ -339,9 +345,9 @@ class AlmaDigitalUploader:
+ 
+             except Exception as e:
+                 result.metadata["representation_action"] = "error"
+-                result.metadata["representation_error"] = str(e)
++                result.metadata["representation_error"] = type(e).__name__
+                 failed += 1
+-                self.logger.error(f"Error processing {mms_id}: {e}")
++                self.logger.error(f"Error processing {mms_id}: {type(e).__name__}")
+ 
+         self.logger.info(f"\n=== Representation Summary ===")
+         self.logger.info(f"Created: {created}")
+@@ -496,7 +502,9 @@ class AlmaDigitalUploader:
+ 
+                 except Exception as e:
+                     failed_uploads += 1
+-                    self.logger.error(f"Upload failed for {filename}: {e}")
++                    self.logger.error(
++                        f"Upload failed for {filename}: {type(e).__name__}"
++                    )
+ 
+         self.logger.info(f"\n=== Upload Summary ===")
+         self.logger.info(f"Files uploaded: {files_uploaded}")
+@@ -659,7 +667,7 @@ Examples:
+         print("\nUpload completed successfully!")
+ 
+     except Exception as e:
+-        print(f"\nERROR: {e}")
++        print(f"\nERROR: {type(e).__name__} (see log for details)")
+         sys.exit(1)
+ 
+ 
+diff --git a/strategies/marc_907e_strategy.py b/strategies/marc_907e_strategy.py
+index 6b226f9..3da4015 100644
+--- a/strategies/marc_907e_strategy.py
++++ b/strategies/marc_907e_strategy.py
+@@ -189,12 +189,12 @@ class Marc907eStrategy(MatchStrategy):
+             )
+ 
+         except Exception as e:
+-            logger.error(f"Error matching {mms_id}: {e}")
++            logger.error(f"Error matching {mms_id}: {type(e).__name__}")
+             return MatchResult(
+                 mms_id=mms_id,
+                 matched=False,
+                 status="error",
+-                error=str(e),
++                error=type(e).__name__,
+             )
+ 
+     def _discover_files(self, folder_path: str) -> List[str]:
+@@ -214,7 +214,9 @@ class Marc907eStrategy(MatchStrategy):
+                 if os.path.isfile(item_path):
+                     files.append(item_path)
+         except Exception as e:
+-            logger.error(f"Error discovering files in {folder_path}: {e}")
++            logger.error(
++                f"Error discovering files in {folder_path}: {type(e).__name__}"
++            )
+ 
+         return sorted(files)
+ 
+diff --git a/utils/folder_matching.py b/utils/folder_matching.py
+index 3fa2c28..26cf63e 100644
+--- a/utils/folder_matching.py
++++ b/utils/folder_matching.py
+@@ -97,7 +97,7 @@ class FolderMatcher:
+             logger.error(f"TSV file not found: {tsv_path}")
+             raise
+         except Exception as e:
+-            logger.error(f"Error reading TSV file: {e}")
++            logger.error(f"Error reading TSV file: {type(e).__name__}")
+             raise
+ 
+     def list_folders(self, folder_path: str) -> Set[str]:
+@@ -129,7 +129,7 @@ class FolderMatcher:
+             return folders
+ 
+         except Exception as e:
+-            logger.error(f"Error listing folders: {e}")
++            logger.error(f"Error listing folders: {type(e).__name__}")
+             raise
+ 
+     def match_records_to_folders(
+@@ -263,7 +263,7 @@ class FolderMatcher:
+             return output_path
+ 
+         except Exception as e:
+-            logger.error(f"Error writing report: {e}")
++            logger.error(f"Error writing report: {type(e).__name__}")
+             raise
+ 
+     def get_statistics(
+diff --git a/utils/folder_renaming.py b/utils/folder_renaming.py
+index 5c7258d..e026cb9 100644
+--- a/utils/folder_renaming.py
++++ b/utils/folder_renaming.py
+@@ -308,8 +308,10 @@ class FolderRenamer:
+             logger.error(f"Error: {candidate.error}")
+         except Exception as e:
+             candidate.status = "error"
+-            candidate.error = str(e)
+-            logger.error(f"Error renaming {candidate.old_name}: {e}")
++            candidate.error = type(e).__name__
++            logger.error(
++                f"Error renaming {candidate.old_name}: {type(e).__name__}"
++            )
+ 
+         return candidate
+ 
+@@ -393,13 +395,19 @@ class FolderRenamer:
+                 writer.writerow(["MMS_ID", "Old_Name", "New_Name", "Status", "Error"])
+ 
+                 for result in results:
++                    # Write only a sanitized error category, never raw OS error
++                    # text. The first token of the recorded error is a safe
++                    # category/exception type; any trailing detail is dropped.
++                    error_category = (
++                        result.error.split(":")[0].strip() if result.error else ""
++                    )
+                     writer.writerow(
+                         [
+                             result.mms_id,
+                             result.old_name,
+                             result.new_name,
+                             result.status,
+-                            result.error or "",
++                            error_category,
+                         ]
+                     )
+ 
+@@ -407,7 +415,7 @@ class FolderRenamer:
+             return output_path
+ 
+         except Exception as e:
+-            logger.error(f"Failed to write report: {e}")
++            logger.error(f"Failed to write report: {type(e).__name__}")
+             raise
+ 
+     def get_statistics(self, results: List[RenameCandidate]) -> Dict[str, int]:
+diff --git a/utils/marc_extraction.py b/utils/marc_extraction.py
+index fb0f41f..a465f5c 100644
+--- a/utils/marc_extraction.py
++++ b/utils/marc_extraction.py
+@@ -169,12 +169,12 @@ class Marc907Extractor:
+             return results
+ 
+         except Exception as e:
+-            logger.error(f"Error processing MMS ID {mms_id}: {e}")
++            logger.error(f"Error processing MMS ID {mms_id}: {type(e).__name__}")
+             return [
+                 ExtractionResult(
+                     mms_id=mms_id,
+                     status="error",
+-                    error=str(e),
++                    error=type(e).__name__,
+                 )
+             ]
+ 
+@@ -282,7 +282,7 @@ class Marc907Extractor:
+             return output_file
+ 
+         except IOError as e:
+-            logger.error(f"Failed to write TSV file: {e}")
++            logger.error(f"Failed to write TSV file: {type(e).__name__}")
+             raise
+ 
+     def get_statistics(self, results: List[ExtractionResult]) -> Dict[str, int]:
+diff --git a/utils/resume_helper.py b/utils/resume_helper.py
+index 94fe6f5..2a6306b 100644
+--- a/utils/resume_helper.py
++++ b/utils/resume_helper.py
+@@ -10,6 +10,7 @@ import csv
+ import json
+ import logging
+ import os
++import re
+ from dataclasses import dataclass, field
+ from datetime import datetime
+ from pathlib import Path
+@@ -17,6 +18,33 @@ from typing import Any, Dict, List, Optional, Set
+ 
+ logger = logging.getLogger(__name__)
+ 
++# Keys whose values are treated as secrets and redacted before persisting config.
++_SECRET_KEY_PATTERN = re.compile(
++    r"api[_-]?key|secret|token|password|passwd|credential|authorization|auth",
++    re.IGNORECASE,
++)
++
++
++def _redact_config(value: Any) -> Any:
++    """
++    Return a deep copy of a config structure with secret values redacted.
++
++    Any dict key matching common secret names (api_key, secret, token,
++    password, credential, authorization, auth) has its value replaced by
++    "***REDACTED***". Non-secret keys are preserved intact.
++    """
++    if isinstance(value, dict):
++        redacted: Dict[Any, Any] = {}
++        for key, item in value.items():
++            if isinstance(key, str) and _SECRET_KEY_PATTERN.search(key):
++                redacted[key] = "***REDACTED***"
++            else:
++                redacted[key] = _redact_config(item)
++        return redacted
++    if isinstance(value, list):
++        return [_redact_config(item) for item in value]
++    return value
++
+ 
+ @dataclass
+ class ProcessingResults:
+@@ -149,7 +177,7 @@ class ResumeHelper:
+             )
+ 
+         except Exception as e:
+-            logger.error(f"Error reading log info: {e}")
++            logger.error(f"Error reading log info: {type(e).__name__}")
+             raise
+ 
+     def extract_processed_mms_ids(self, log_file_path: str) -> ProcessingResults:
+@@ -239,7 +267,7 @@ class ResumeHelper:
+             return results
+ 
+         except Exception as e:
+-            logger.error(f"Error extracting processed IDs: {e}")
++            logger.error(f"Error extracting processed IDs: {type(e).__name__}")
+             raise
+ 
+     def create_resume_tsv(
+@@ -304,7 +332,7 @@ class ResumeHelper:
+             return output_path
+ 
+         except Exception as e:
+-            logger.error(f"Error creating resume TSV: {e}")
++            logger.error(f"Error creating resume TSV: {type(e).__name__}")
+             raise
+ 
+     def create_resume_config(
+@@ -349,15 +377,15 @@ class ResumeHelper:
+                 config["output_settings"] = {}
+             config["output_settings"]["file_prefix"] = "alma_resume"
+ 
+-            # Write new config
++            # Write new config (redact any secret values before persisting)
+             with open(output_config_path, "w") as f:
+-                json.dump(config, f, indent=2)
++                json.dump(_redact_config(config), f, indent=2)
+ 
+             logger.info(f"Resume config created: {output_config_path}")
+             return output_config_path
+ 
+         except Exception as e:
+-            logger.error(f"Error creating resume config: {e}")
++            logger.error(f"Error creating resume config: {type(e).__name__}")
+             raise
+ 
+     def display_analysis(self, results: ProcessingResults) -> None:

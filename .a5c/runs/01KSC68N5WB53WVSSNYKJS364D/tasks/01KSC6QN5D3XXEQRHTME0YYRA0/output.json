@@ -1,0 +1,14 @@
+{
+  "filesModified": ["alma_digital_upload.py", "utils/resume_helper.py", "utils/marc_extraction.py", "utils/folder_matching.py", "utils/folder_renaming.py", "strategies/marc_907e_strategy.py"],
+  "fixedCount": 21,
+  "deferredCount": 4,
+  "groupsApplied": ["G1", "G2", "G3", "G4", "G5"],
+  "supplementaryHardening": ["utils/marc_extraction.py:177 error=str(e)->type(e).__name__", "strategies/marc_907e_strategy.py:197 error=str(e)->type(e).__name__"],
+  "deferred": [
+    {"id": "G6", "reason": "resume_helper.py:296 TSV passthrough / folder_matching.py:260 folder names / marc_extraction.py:271 MARC TSV — data-dependent PII, not a code defect"},
+    {"id": "G7", "reason": "alma_digital_upload.py:431 'AWS credentials loaded' info log — no secret value"}
+  ],
+  "traceabilityPreserved": true,
+  "remainingRawExceptionEmissions": [],
+  "remainingNonEmittedExceptionText": ["alma_digital_upload.py:110 raise ValueError(...{e}) — caught+sanitized by G2 at top level, never emitted raw; JSONDecodeError carries no credentials"]
+}

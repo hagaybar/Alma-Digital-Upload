@@ -1,0 +1,191 @@
+{
+  "schemaVersion": "2026.01.results-v1",
+  "effectId": "01KSC4AVSAK4GCWFZJ5EH7DSKA",
+  "taskId": "analyze-usage",
+  "invocationKey": "alma-digital-upload/almaapitk-upgrade-verify:S000001:analyze-usage",
+  "status": "ok",
+  "result": {
+    "loggingUsage": [],
+    "notes": "No direct usage of almaapitk logging internals (TextFormatter, JSONFormatter, redact_sensitive_data, alma_logging). Project uses stdlib logging. All almaapitk usage in alma_digital_upload.py plus BibliographicRecords.get_marc_subfield invoked from strategies/utils.",
+    "symbols": [
+      {
+        "calledAs": "AlmaAPIClient(environment)",
+        "kind": "class",
+        "locations": [
+          "alma_digital_upload.py:37",
+          "alma_digital_upload.py:185"
+        ],
+        "symbol": "almaapitk.AlmaAPIClient"
+      },
+      {
+        "calledAs": "Admin(client)",
+        "kind": "class",
+        "locations": [
+          "alma_digital_upload.py:37",
+          "alma_digital_upload.py:190"
+        ],
+        "symbol": "almaapitk.Admin"
+      },
+      {
+        "calledAs": "BibliographicRecords(client)",
+        "kind": "class",
+        "locations": [
+          "alma_digital_upload.py:37",
+          "alma_digital_upload.py:191"
+        ],
+        "symbol": "almaapitk.BibliographicRecords"
+      },
+      {
+        "calledAs": "alma_client.test_connection()",
+        "kind": "method",
+        "locations": [
+          "alma_digital_upload.py:187"
+        ],
+        "symbol": "AlmaAPIClient.test_connection"
+      },
+      {
+        "calledAs": "admin.get_set_info(set_id)",
+        "kind": "method",
+        "locations": [
+          "alma_digital_upload.py:206"
+        ],
+        "symbol": "Admin.get_set_info"
+      },
+      {
+        "calledAs": "admin.get_bib_set_members(set_id)",
+        "kind": "method",
+        "locations": [
+          "alma_digital_upload.py:219"
+        ],
+        "symbol": "Admin.get_bib_set_members"
+      },
+      {
+        "calledAs": "bibs.get_representations(mms_id)",
+        "kind": "method",
+        "locations": [
+          "alma_digital_upload.py:285"
+        ],
+        "symbol": "BibliographicRecords.get_representations"
+      },
+      {
+        "calledAs": "bibs.create_representation(mms_id=, access_rights_value=, access_rights_desc=, lib_code=, usage_type=)",
+        "kind": "method",
+        "locations": [
+          "alma_digital_upload.py:314"
+        ],
+        "symbol": "BibliographicRecords.create_representation"
+      },
+      {
+        "calledAs": "bibs.link_file_to_representation(mms_id=, representation_id=, file_path=)",
+        "kind": "method",
+        "locations": [
+          "alma_digital_upload.py:481"
+        ],
+        "symbol": "BibliographicRecords.link_file_to_representation"
+      },
+      {
+        "calledAs": "bibs_client.get_marc_subfield(mms_id, field, subfield)",
+        "kind": "method",
+        "locations": [
+          "strategies/marc_907e_strategy.py:114",
+          "utils/marc_extraction.py:81",
+          "utils/marc_extraction.py:82"
+        ],
+        "symbol": "BibliographicRecords.get_marc_subfield"
+      }
+    ]
+  },
+  "startedAt": "2026-05-24T04:37:45.622Z",
+  "finishedAt": "2026-05-24T04:37:45.622Z",
+  "value": {
+    "loggingUsage": [],
+    "notes": "No direct usage of almaapitk logging internals (TextFormatter, JSONFormatter, redact_sensitive_data, alma_logging). Project uses stdlib logging. All almaapitk usage in alma_digital_upload.py plus BibliographicRecords.get_marc_subfield invoked from strategies/utils.",
+    "symbols": [
+      {
+        "calledAs": "AlmaAPIClient(environment)",
+        "kind": "class",
+        "locations": [
+          "alma_digital_upload.py:37",
+          "alma_digital_upload.py:185"
+        ],
+        "symbol": "almaapitk.AlmaAPIClient"
+      },
+      {
+        "calledAs": "Admin(client)",
+        "kind": "class",
+        "locations": [
+          "alma_digital_upload.py:37",
+          "alma_digital_upload.py:190"
+        ],
+        "symbol": "almaapitk.Admin"
+      },
+      {
+        "calledAs": "BibliographicRecords(client)",
+        "kind": "class",
+        "locations": [
+          "alma_digital_upload.py:37",
+          "alma_digital_upload.py:191"
+        ],
+        "symbol": "almaapitk.BibliographicRecords"
+      },
+      {
+        "calledAs": "alma_client.test_connection()",
+        "kind": "method",
+        "locations": [
+          "alma_digital_upload.py:187"
+        ],
+        "symbol": "AlmaAPIClient.test_connection"
+      },
+      {
+        "calledAs": "admin.get_set_info(set_id)",
+        "kind": "method",
+        "locations": [
+          "alma_digital_upload.py:206"
+        ],
+        "symbol": "Admin.get_set_info"
+      },
+      {
+        "calledAs": "admin.get_bib_set_members(set_id)",
+        "kind": "method",
+        "locations": [
+          "alma_digital_upload.py:219"
+        ],
+        "symbol": "Admin.get_bib_set_members"
+      },
+      {
+        "calledAs": "bibs.get_representations(mms_id)",
+        "kind": "method",
+        "locations": [
+          "alma_digital_upload.py:285"
+        ],
+        "symbol": "BibliographicRecords.get_representations"
+      },
+      {
+        "calledAs": "bibs.create_representation(mms_id=, access_rights_value=, access_rights_desc=, lib_code=, usage_type=)",
+        "kind": "method",
+        "locations": [
+          "alma_digital_upload.py:314"
+        ],
+        "symbol": "BibliographicRecords.create_representation"
+      },
+      {
+        "calledAs": "bibs.link_file_to_representation(mms_id=, representation_id=, file_path=)",
+        "kind": "method",
+        "locations": [
+          "alma_digital_upload.py:481"
+        ],
+        "symbol": "BibliographicRecords.link_file_to_representation"
+      },
+      {
+        "calledAs": "bibs_client.get_marc_subfield(mms_id, field, subfield)",
+        "kind": "method",
+        "locations": [
+          "strategies/marc_907e_strategy.py:114",
+          "utils/marc_extraction.py:81",
+          "utils/marc_extraction.py:82"
+        ],
+        "symbol": "BibliographicRecords.get_marc_subfield"
+      }
+    ]
+  }
+}

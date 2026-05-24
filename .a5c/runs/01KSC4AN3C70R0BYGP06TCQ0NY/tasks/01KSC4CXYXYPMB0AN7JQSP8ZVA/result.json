@@ -1,0 +1,27 @@
+{
+  "schemaVersion": "2026.01.results-v1",
+  "effectId": "01KSC4CXYXYPMB0AN7JQSP8ZVA",
+  "taskId": "apply-upgrade",
+  "invocationKey": "alma-digital-upload/almaapitk-upgrade-verify:S000002:apply-upgrade",
+  "status": "ok",
+  "result": {
+    "installed": true,
+    "installedVersion": "0.4.5",
+    "lockedVersion": "0.4.5",
+    "lockResolved": true,
+    "newPin": "almaapitk = \">=0.4.5\"",
+    "oldPin": "almaapitk = \">=0.3.1\"",
+    "pinChanged": true
+  },
+  "startedAt": "2026-05-24T04:38:25.574Z",
+  "finishedAt": "2026-05-24T04:38:25.574Z",
+  "value": {
+    "installed": true,
+    "installedVersion": "0.4.5",
+    "lockedVersion": "0.4.5",
+    "lockResolved": true,
+    "newPin": "almaapitk = \">=0.4.5\"",
+    "oldPin": "almaapitk = \">=0.3.1\"",
+    "pinChanged": true
+  }
+}

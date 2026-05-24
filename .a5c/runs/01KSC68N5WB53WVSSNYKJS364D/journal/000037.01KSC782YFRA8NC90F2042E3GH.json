@@ -1,0 +1,20 @@
+{
+  "type": "EFFECT_REQUESTED",
+  "recordedAt": "2026-05-24T05:27:40.751Z",
+  "data": {
+    "harness": "claude-code",
+    "effectId": "01KSC782Y3J2DE2XBB5G3A42YG",
+    "invocationKey": "alma-digital-upload/sensitive-data-leak-audit:S000013:post-issue-comment",
+    "invocationHash": "a5741cf3e5d7921b8b8e18d3e9f3739cd82e49aa4a25cefdd67400a6531f95d6",
+    "stepId": "S000013",
+    "taskId": "post-issue-comment",
+    "kind": "shell",
+    "label": "github",
+    "taskDefRef": "tasks/01KSC782Y3J2DE2XBB5G3A42YG/task.json",
+    "labels": [
+      "github",
+      "issue-comment"
+    ]
+  },
+  "checksum": "e1ab57c8423a8373f1b63c0e767adf75102fe2089235eaf1199190c1b5dc0bc0"
+}

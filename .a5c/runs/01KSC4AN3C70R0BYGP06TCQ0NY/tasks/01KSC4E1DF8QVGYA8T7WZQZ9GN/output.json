@@ -1,0 +1,16 @@
+{
+  "aligned": true,
+  "results": [
+    {"symbol": "almaapitk.AlmaAPIClient", "present": true, "signatureMatch": true, "note": "__init__(self, environment='SANDBOX', *, max_retries=3, backoff_factor=1.0, retry=None, timeout=None, region='EU', host=None). One positional 'environment' accepted; others keyword-only with defaults, none newly required."},
+    {"symbol": "AlmaAPIClient.test_connection()", "present": true, "signatureMatch": true, "note": "(self) -> bool. No args."},
+    {"symbol": "almaapitk.Admin", "present": true, "signatureMatch": true, "note": "__init__(self, client). One positional client, required."},
+    {"symbol": "Admin.get_set_info(set_id)", "present": true, "signatureMatch": true, "note": "(self, set_id: str) -> Dict. Positional accepted."},
+    {"symbol": "Admin.get_bib_set_members(set_id)", "present": true, "signatureMatch": true, "note": "(self, set_id: str) -> List[str]. Positional accepted."},
+    {"symbol": "almaapitk.BibliographicRecords", "present": true, "signatureMatch": true, "note": "__init__(self, client). One positional client, required."},
+    {"symbol": "BibliographicRecords.get_representations(mms_id)", "present": true, "signatureMatch": true, "note": "(self, mms_id, representation_id=None). mms_id positional accepted."},
+    {"symbol": "BibliographicRecords.create_representation(...)", "present": true, "signatureMatch": true, "note": "(self, mms_id, access_rights_value, access_rights_desc, lib_code, usage_type='PRESERVATION_MASTER'). All 5 keyword names exist; usage_type now has a default but still accepts the keyword; no newly-required param."},
+    {"symbol": "BibliographicRecords.link_file_to_representation(...)", "present": true, "signatureMatch": true, "note": "(self, mms_id, representation_id, file_path). All 3 keyword names exist, all supplied."},
+    {"symbol": "BibliographicRecords.get_marc_subfield(mms_id, field, subfield)", "present": true, "signatureMatch": true, "note": "(self, mms_id, field, subfield) -> List[str]. All positional accepted."}
+  ],
+  "breaking": []
+}

@@ -1,0 +1,69 @@
+{
+  "kind": "breakpoint",
+  "metadata": {
+    "label": "breakpoint",
+    "payload": {
+      "context": {
+        "files": [
+          {
+            "format": "markdown",
+            "path": "artifacts/fix-report.md"
+          },
+          {
+            "format": "code",
+            "language": "diff",
+            "path": "artifacts/fixes.diff"
+          }
+        ]
+      },
+      "expert": "owner",
+      "options": [
+        "Approve commit to main",
+        "Skip commit (leave changes uncommitted)"
+      ],
+      "question": "Applied 21 fix(es) across 6 file(s); tests PASS. Review the diff and approve commit to main?",
+      "tags": [
+        "approval-gate",
+        "commit"
+      ],
+      "title": "Approve commit to main"
+    },
+    "requestedAt": "2026-05-24T05:24:43.134Z"
+  },
+  "title": "breakpoint",
+  "schemaVersion": "2026.01.tasks-v1",
+  "effectId": "01KSC72NFY4VZC0EZXKRF8VYJF",
+  "taskId": "__sdk.breakpoint",
+  "invocationKey": "alma-digital-upload/sensitive-data-leak-audit:S000010:__sdk.breakpoint",
+  "stepId": "S000010",
+  "inputs": {
+    "label": "breakpoint",
+    "payload": {
+      "context": {
+        "files": [
+          {
+            "format": "markdown",
+            "path": "artifacts/fix-report.md"
+          },
+          {
+            "format": "code",
+            "language": "diff",
+            "path": "artifacts/fixes.diff"
+          }
+        ]
+      },
+      "expert": "owner",
+      "options": [
+        "Approve commit to main",
+        "Skip commit (leave changes uncommitted)"
+      ],
+      "question": "Applied 21 fix(es) across 6 file(s); tests PASS. Review the diff and approve commit to main?",
+      "tags": [
+        "approval-gate",
+        "commit"
+      ],
+      "title": "Approve commit to main"
+    },
+    "requestedAt": "2026-05-24T05:24:43.134Z"
+  }
+}

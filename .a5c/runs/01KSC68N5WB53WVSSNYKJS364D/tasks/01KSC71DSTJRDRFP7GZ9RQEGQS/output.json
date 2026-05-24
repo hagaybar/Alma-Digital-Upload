@@ -1,0 +1,15 @@
+{
+  "allResolved": true,
+  "results": [
+    {"id": "G1", "resolved": true, "note": "_redact_config() defined (resume_helper.py:28) and applied at json.dump (line 382)"},
+    {"id": "G2", "resolved": true, "note": "stdout print emits type(e).__name__ only"},
+    {"id": "G3", "resolved": true, "note": "all 16 sites log type(e).__name__ with identifier preserved; metadata stores type name"},
+    {"id": "G4", "resolved": true, "note": "botocore/boto3/urllib3 pinned to WARNING (lines 82-84); app DEBUG intact"},
+    {"id": "G5", "resolved": true, "note": "rename_report TSV writes sanitized error category; identifiers intact"},
+    {"id": "supplementary", "resolved": true, "note": "ExtractionResult.error and MatchResult.error now store type(e).__name__"}
+  ],
+  "newIssues": [],
+  "emissionGrep": "EMISSIONS_NONE",
+  "compileOk": true,
+  "note": "Only remaining {e} is alma_digital_upload.py:110 re-raise, caught+sanitized at top level (not an emission). Traceability preserved across all edits."
+}

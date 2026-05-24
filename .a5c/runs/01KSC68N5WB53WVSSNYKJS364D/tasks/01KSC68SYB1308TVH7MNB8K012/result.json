@@ -1,0 +1,169 @@
+{
+  "schemaVersion": "2026.01.results-v1",
+  "effectId": "01KSC68SYB1308TVH7MNB8K012",
+  "taskId": "audit-file-writes",
+  "invocationKey": "alma-digital-upload/sensitive-data-leak-audit:S000002:audit-file-writes",
+  "status": "ok",
+  "result": {
+    "findings": [
+      {
+        "category": "config-dump",
+        "file": "utils/resume_helper.py",
+        "line": 354,
+        "proposedFix": "redact: sanitize config before dump - drop/redact api_key/secret/token/password/credential keys; keep only safe keys (paths, codes, IDs)",
+        "severity": "actual-leak",
+        "what": "json.dump(config, f, indent=2) writes the entire user config dict to resume_config_*.json",
+        "whySensitive": "If config.json holds alma.api_key / aws secret / token fields, they are written verbatim in plaintext to an output file"
+      },
+      {
+        "category": "filehandler-debug",
+        "file": "alma_digital_upload.py",
+        "line": 65,
+        "proposedFix": "change-log-level: set FileHandler to INFO (or guard DEBUG); combined with redacting exception logging",
+        "severity": "possible-leak",
+        "what": "logging.FileHandler at DEBUG writes alma_upload_*.log capturing all records incl. str(e) error lines",
+        "whySensitive": "DEBUG file logs aggregate exception text from lines 344/499 etc."
+      },
+      {
+        "category": "metadata-store",
+        "file": "alma_digital_upload.py",
+        "line": 342,
+        "proposedFix": "store error code/type only, not str(e)",
+        "severity": "possible-leak",
+        "what": "result.metadata['representation_error'] = str(e) (stored, then potentially written/exported)",
+        "whySensitive": "Stores raw Alma API exception text which may carry auth/endpoint detail"
+      },
+      {
+        "category": "exception-log",
+        "file": "alma_digital_upload.py",
+        "line": 499,
+        "proposedFix": "log filename + type only",
+        "severity": "possible-leak",
+        "what": "logger.error(f\"Upload failed for {filename}: {e}\") (also lands in file log)",
+        "whySensitive": "boto3 error may leak bucket/AWS config"
+      },
+      {
+        "category": "tsv-error-field",
+        "file": "utils/folder_renaming.py",
+        "line": 396,
+        "proposedFix": "redact: write error type/code only, strip paths",
+        "severity": "possible-leak",
+        "what": "writer.writerow([..., result.error or '']) writes error strings to rename_report_*.tsv",
+        "whySensitive": "result.error may contain OS error messages with FS paths"
+      },
+      {
+        "category": "tsv-passthrough",
+        "file": "utils/resume_helper.py",
+        "line": 296,
+        "proposedFix": "document input must not contain sensitive data; optional column whitelist",
+        "severity": "theoretical",
+        "what": "writer.writerows(unprocessed_records) copies input TSV rows to resume_tsv_*.tsv",
+        "whySensitive": "If input TSV has PII beyond MMS_ID, it is copied verbatim"
+      },
+      {
+        "category": "tsv-folder-names",
+        "file": "utils/folder_matching.py",
+        "line": 260,
+        "proposedFix": "document output contains folder names; optional anonymization",
+        "severity": "theoretical",
+        "what": "writer.writerow([folder, ...]) writes filesystem folder names to folder_match_report_*.tsv",
+        "whySensitive": "Folder names may embed patron IDs/PII"
+      },
+      {
+        "category": "tsv-marc",
+        "file": "utils/marc_extraction.py",
+        "line": 271,
+        "proposedFix": "document output classification; review 907 content for PII",
+        "severity": "theoretical",
+        "what": "writer.writerow([mms_id, marc_907e, marc_907l_cleaned]) to marc_907_mapping_*.tsv",
+        "whySensitive": "MARC 907 paths could embed identifying info depending on catalog practice"
+      }
+    ],
+    "notes": "Primary actual-leak: resume_helper.py:354 unfiltered json.dump of user config to resume_config_*.json. All writes target ./output. DEBUG FileHandler aggregates exception text. Overlaps with output-paths findings at lines 344/499 (same root: logging str(e)).",
+    "scanned": {
+      "writeSites": 9
+    }
+  },
+  "startedAt": "2026-05-24T05:13:43.243Z",
+  "finishedAt": "2026-05-24T05:13:43.243Z",
+  "value": {
+    "findings": [
+      {
+        "category": "config-dump",
+        "file": "utils/resume_helper.py",
+        "line": 354,
+        "proposedFix": "redact: sanitize config before dump - drop/redact api_key/secret/token/password/credential keys; keep only safe keys (paths, codes, IDs)",
+        "severity": "actual-leak",
+        "what": "json.dump(config, f, indent=2) writes the entire user config dict to resume_config_*.json",
+        "whySensitive": "If config.json holds alma.api_key / aws secret / token fields, they are written verbatim in plaintext to an output file"
+      },
+      {
+        "category": "filehandler-debug",
+        "file": "alma_digital_upload.py",
+        "line": 65,
+        "proposedFix": "change-log-level: set FileHandler to INFO (or guard DEBUG); combined with redacting exception logging",
+        "severity": "possible-leak",
+        "what": "logging.FileHandler at DEBUG writes alma_upload_*.log capturing all records incl. str(e) error lines",
+        "whySensitive": "DEBUG file logs aggregate exception text from lines 344/499 etc."
+      },
+      {
+        "category": "metadata-store",
+        "file": "alma_digital_upload.py",
+        "line": 342,
+        "proposedFix": "store error code/type only, not str(e)",
+        "severity": "possible-leak",
+        "what": "result.metadata['representation_error'] = str(e) (stored, then potentially written/exported)",
+        "whySensitive": "Stores raw Alma API exception text which may carry auth/endpoint detail"
+      },
+      {
+        "category": "exception-log",
+        "file": "alma_digital_upload.py",
+        "line": 499,
+        "proposedFix": "log filename + type only",
+        "severity": "possible-leak",
+        "what": "logger.error(f\"Upload failed for {filename}: {e}\") (also lands in file log)",
+        "whySensitive": "boto3 error may leak bucket/AWS config"
+      },
+      {
+        "category": "tsv-error-field",
+        "file": "utils/folder_renaming.py",
+        "line": 396,
+        "proposedFix": "redact: write error type/code only, strip paths",
+        "severity": "possible-leak",
+        "what": "writer.writerow([..., result.error or '']) writes error strings to rename_report_*.tsv",
+        "whySensitive": "result.error may contain OS error messages with FS paths"
+      },
+      {
+        "category": "tsv-passthrough",
+        "file": "utils/resume_helper.py",
+        "line": 296,
+        "proposedFix": "document input must not contain sensitive data; optional column whitelist",
+        "severity": "theoretical",
+        "what": "writer.writerows(unprocessed_records) copies input TSV rows to resume_tsv_*.tsv",
+        "whySensitive": "If input TSV has PII beyond MMS_ID, it is copied verbatim"
+      },
+      {
+        "category": "tsv-folder-names",
+        "file": "utils/folder_matching.py",
+        "line": 260,
+        "proposedFix": "document output contains folder names; optional anonymization",
+        "severity": "theoretical",
+        "what": "writer.writerow([folder, ...]) writes filesystem folder names to folder_match_report_*.tsv",
+        "whySensitive": "Folder names may embed patron IDs/PII"
+      },
+      {
+        "category": "tsv-marc",
+        "file": "utils/marc_extraction.py",
+        "line": 271,
+        "proposedFix": "document output classification; review 907 content for PII",
+        "severity": "theoretical",
+        "what": "writer.writerow([mms_id, marc_907e, marc_907l_cleaned]) to marc_907_mapping_*.tsv",
+        "whySensitive": "MARC 907 paths could embed identifying info depending on catalog practice"
+      }
+    ],
+    "notes": "Primary actual-leak: resume_helper.py:354 unfiltered json.dump of user config to resume_config_*.json. All writes target ./output. DEBUG FileHandler aggregates exception text. Overlaps with output-paths findings at lines 344/499 (same root: logging str(e)).",
+    "scanned": {
+      "writeSites": 9
+    }
+  }
+}

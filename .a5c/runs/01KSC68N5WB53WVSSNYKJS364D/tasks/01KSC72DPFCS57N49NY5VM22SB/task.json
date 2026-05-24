@@ -1,0 +1,223 @@
+{
+  "agent": {
+    "name": "general-purpose",
+    "outputSchema": {
+      "properties": {
+        "summary": {
+          "type": "string"
+        },
+        "testsPass": {
+          "type": "boolean"
+        },
+        "verified": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "verified",
+        "summary"
+      ],
+      "type": "object"
+    },
+    "prompt": {
+      "context": {
+        "attempt": 1,
+        "fixResult": {
+          "deferred": [
+            {
+              "id": "G6",
+              "reason": "resume_helper.py:296 TSV passthrough / folder_matching.py:260 folder names / marc_extraction.py:271 MARC TSV — data-dependent PII, not a code defect"
+            },
+            {
+              "id": "G7",
+              "reason": "alma_digital_upload.py:431 'AWS credentials loaded' info log — no secret value"
+            }
+          ],
+          "deferredCount": 4,
+          "filesModified": [
+            "alma_digital_upload.py",
+            "utils/resume_helper.py",
+            "utils/marc_extraction.py",
+            "utils/folder_matching.py",
+            "utils/folder_renaming.py",
+            "strategies/marc_907e_strategy.py"
+          ],
+          "fixedCount": 21,
+          "groupsApplied": [
+            "G1",
+            "G2",
+            "G3",
+            "G4",
+            "G5"
+          ],
+          "remainingNonEmittedExceptionText": [
+            "alma_digital_upload.py:110 raise ValueError(...{e}) — caught+sanitized by G2 at top level, never emitted raw; JSONDecodeError carries no credentials"
+          ],
+          "remainingRawExceptionEmissions": [],
+          "supplementaryHardening": [
+            "utils/marc_extraction.py:177 error=str(e)->type(e).__name__",
+            "strategies/marc_907e_strategy.py:197 error=str(e)->type(e).__name__"
+          ],
+          "traceabilityPreserved": true
+        },
+        "reverify": {
+          "allResolved": true,
+          "compileOk": true,
+          "emissionGrep": "EMISSIONS_NONE",
+          "newIssues": [],
+          "note": "Only remaining {e} is alma_digital_upload.py:110 re-raise, caught+sanitized at top level (not an emission). Traceability preserved across all edits.",
+          "results": [
+            {
+              "id": "G1",
+              "note": "_redact_config() defined (resume_helper.py:28) and applied at json.dump (line 382)",
+              "resolved": true
+            },
+            {
+              "id": "G2",
+              "note": "stdout print emits type(e).__name__ only",
+              "resolved": true
+            },
+            {
+              "id": "G3",
+              "note": "all 16 sites log type(e).__name__ with identifier preserved; metadata stores type name",
+              "resolved": true
+            },
+            {
+              "id": "G4",
+              "note": "botocore/boto3/urllib3 pinned to WARNING (lines 82-84); app DEBUG intact",
+              "resolved": true
+            },
+            {
+              "id": "G5",
+              "note": "rename_report TSV writes sanitized error category; identifiers intact",
+              "resolved": true
+            },
+            {
+              "id": "supplementary",
+              "note": "ExtractionResult.error and MatchResult.error now store type(e).__name__",
+              "resolved": true
+            }
+          ]
+        },
+        "tests": {
+          "command": "poetry run pytest -q",
+          "compileOk": true,
+          "exitCode": 0,
+          "passed": true,
+          "summary": "25 passed in ~5s"
+        }
+      },
+      "instructions": [
+        "verified = true ONLY IF tests passed AND reverify.allResolved is true AND no new issues were introduced.",
+        "Set testsPass boolean. If not verified, put actionable steps in remediation.",
+        "Keep summary to one or two sentences."
+      ],
+      "outputFormat": "JSON: { verified: boolean, testsPass: boolean, summary: string, remediation: string }",
+      "role": "Release-readiness reviewer",
+      "task": "Decide whether the applied fixes are verified and safe to commit."
+    }
+  },
+  "description": "Aggregate tests + re-verification into a verified verdict",
+  "io": {
+    "inputJsonPath": "tasks/01KSC72DPFCS57N49NY5VM22SB/input.json",
+    "outputJsonPath": "tasks/01KSC72DPFCS57N49NY5VM22SB/output.json"
+  },
+  "kind": "agent",
+  "labels": [
+    "review",
+    "verification"
+  ],
+  "title": "Fix verification verdict (attempt 1)",
+  "schemaVersion": "2026.01.tasks-v1",
+  "effectId": "01KSC72DPFCS57N49NY5VM22SB",
+  "taskId": "fix-review",
+  "invocationKey": "alma-digital-upload/sensitive-data-leak-audit:S000009:fix-review",
+  "stepId": "S000009",
+  "inputs": {
+    "attempt": 1,
+    "fixResult": {
+      "deferred": [
+        {
+          "id": "G6",
+          "reason": "resume_helper.py:296 TSV passthrough / folder_matching.py:260 folder names / marc_extraction.py:271 MARC TSV — data-dependent PII, not a code defect"
+        },
+        {
+          "id": "G7",
+          "reason": "alma_digital_upload.py:431 'AWS credentials loaded' info log — no secret value"
+        }
+      ],
+      "deferredCount": 4,
+      "filesModified": [
+        "alma_digital_upload.py",
+        "utils/resume_helper.py",
+        "utils/marc_extraction.py",
+        "utils/folder_matching.py",
+        "utils/folder_renaming.py",
+        "strategies/marc_907e_strategy.py"
+      ],
+      "fixedCount": 21,
+      "groupsApplied": [
+        "G1",
+        "G2",
+        "G3",
+        "G4",
+        "G5"
+      ],
+      "remainingNonEmittedExceptionText": [
+        "alma_digital_upload.py:110 raise ValueError(...{e}) — caught+sanitized by G2 at top level, never emitted raw; JSONDecodeError carries no credentials"
+      ],
+      "remainingRawExceptionEmissions": [],
+      "supplementaryHardening": [
+        "utils/marc_extraction.py:177 error=str(e)->type(e).__name__",
+        "strategies/marc_907e_strategy.py:197 error=str(e)->type(e).__name__"
+      ],
+      "traceabilityPreserved": true
+    },
+    "reverify": {
+      "allResolved": true,
+      "compileOk": true,
+      "emissionGrep": "EMISSIONS_NONE",
+      "newIssues": [],
+      "note": "Only remaining {e} is alma_digital_upload.py:110 re-raise, caught+sanitized at top level (not an emission). Traceability preserved across all edits.",
+      "results": [
+        {
+          "id": "G1",
+          "note": "_redact_config() defined (resume_helper.py:28) and applied at json.dump (line 382)",
+          "resolved": true
+        },
+        {
+          "id": "G2",
+          "note": "stdout print emits type(e).__name__ only",
+          "resolved": true
+        },
+        {
+          "id": "G3",
+          "note": "all 16 sites log type(e).__name__ with identifier preserved; metadata stores type name",
+          "resolved": true
+        },
+        {
+          "id": "G4",
+          "note": "botocore/boto3/urllib3 pinned to WARNING (lines 82-84); app DEBUG intact",
+          "resolved": true
+        },
+        {
+          "id": "G5",
+          "note": "rename_report TSV writes sanitized error category; identifiers intact",
+          "resolved": true
+        },
+        {
+          "id": "supplementary",
+          "note": "ExtractionResult.error and MatchResult.error now store type(e).__name__",
+          "resolved": true
+        }
+      ]
+    },
+    "tests": {
+      "command": "poetry run pytest -q",
+      "compileOk": true,
+      "exitCode": 0,
+      "passed": true,
+      "summary": "25 passed in ~5s"
+    }
+  }
+}

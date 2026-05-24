@@ -1,0 +1,59 @@
+{
+  "kind": "breakpoint",
+  "metadata": {
+    "label": "breakpoint",
+    "payload": {
+      "context": {
+        "files": [
+          {
+            "format": "markdown",
+            "path": "artifacts/issue-summary.md"
+          }
+        ]
+      },
+      "expert": "owner",
+      "options": [
+        "Post the summary comment",
+        "Skip — I will comment myself"
+      ],
+      "question": "Post the required summary comment to issue #2? (findings: 25, fixed: 21, deferred: 4)",
+      "tags": [
+        "github",
+        "issue-comment"
+      ],
+      "title": "Post summary comment to issue #2"
+    },
+    "requestedAt": "2026-05-24T05:26:07.974Z"
+  },
+  "title": "breakpoint",
+  "schemaVersion": "2026.01.tasks-v1",
+  "effectId": "01KSC758B6S39K5S593P2F9HEM",
+  "taskId": "__sdk.breakpoint",
+  "invocationKey": "alma-digital-upload/sensitive-data-leak-audit:S000012:__sdk.breakpoint",
+  "stepId": "S000012",
+  "inputs": {
+    "label": "breakpoint",
+    "payload": {
+      "context": {
+        "files": [
+          {
+            "format": "markdown",
+            "path": "artifacts/issue-summary.md"
+          }
+        ]
+      },
+      "expert": "owner",
+      "options": [
+        "Post the summary comment",
+        "Skip — I will comment myself"
+      ],
+      "question": "Post the required summary comment to issue #2? (findings: 25, fixed: 21, deferred: 4)",
+      "tags": [
+        "github",
+        "issue-comment"
+      ],
+      "title": "Post summary comment to issue #2"
+    },
+    "requestedAt": "2026-05-24T05:26:07.974Z"
+  }
+}

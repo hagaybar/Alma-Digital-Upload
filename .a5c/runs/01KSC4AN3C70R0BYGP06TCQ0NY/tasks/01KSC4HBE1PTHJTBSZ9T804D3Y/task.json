@@ -1,0 +1,416 @@
+{
+  "agent": {
+    "name": "general-purpose",
+    "outputSchema": {
+      "properties": {
+        "aligned": {
+          "type": "boolean"
+        },
+        "apiAligned": {
+          "type": "boolean"
+        },
+        "redactionActive": {
+          "type": "boolean"
+        },
+        "remediation": {
+          "type": "string"
+        },
+        "summary": {
+          "type": "string"
+        },
+        "testsPass": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "aligned",
+        "summary"
+      ],
+      "type": "object"
+    },
+    "prompt": {
+      "context": {
+        "apiSurface": {
+          "aligned": true,
+          "breaking": [],
+          "results": [
+            {
+              "note": "__init__(self, environment='SANDBOX', *, max_retries=3, backoff_factor=1.0, retry=None, timeout=None, region='EU', host=None). One positional 'environment' accepted; others keyword-only with defaults, none newly required.",
+              "present": true,
+              "signatureMatch": true,
+              "symbol": "almaapitk.AlmaAPIClient"
+            },
+            {
+              "note": "(self) -> bool. No args.",
+              "present": true,
+              "signatureMatch": true,
+              "symbol": "AlmaAPIClient.test_connection()"
+            },
+            {
+              "note": "__init__(self, client). One positional client, required.",
+              "present": true,
+              "signatureMatch": true,
+              "symbol": "almaapitk.Admin"
+            },
+            {
+              "note": "(self, set_id: str) -> Dict. Positional accepted.",
+              "present": true,
+              "signatureMatch": true,
+              "symbol": "Admin.get_set_info(set_id)"
+            },
+            {
+              "note": "(self, set_id: str) -> List[str]. Positional accepted.",
+              "present": true,
+              "signatureMatch": true,
+              "symbol": "Admin.get_bib_set_members(set_id)"
+            },
+            {
+              "note": "__init__(self, client). One positional client, required.",
+              "present": true,
+              "signatureMatch": true,
+              "symbol": "almaapitk.BibliographicRecords"
+            },
+            {
+              "note": "(self, mms_id, representation_id=None). mms_id positional accepted.",
+              "present": true,
+              "signatureMatch": true,
+              "symbol": "BibliographicRecords.get_representations(mms_id)"
+            },
+            {
+              "note": "(self, mms_id, access_rights_value, access_rights_desc, lib_code, usage_type='PRESERVATION_MASTER'). All 5 keyword names exist; usage_type now has a default but still accepts the keyword; no newly-required param.",
+              "present": true,
+              "signatureMatch": true,
+              "symbol": "BibliographicRecords.create_representation(...)"
+            },
+            {
+              "note": "(self, mms_id, representation_id, file_path). All 3 keyword names exist, all supplied.",
+              "present": true,
+              "signatureMatch": true,
+              "symbol": "BibliographicRecords.link_file_to_representation(...)"
+            },
+            {
+              "note": "(self, mms_id, field, subfield) -> List[str]. All positional accepted.",
+              "present": true,
+              "signatureMatch": true,
+              "symbol": "BibliographicRecords.get_marc_subfield(mms_id, field, subfield)"
+            }
+          ]
+        },
+        "inventory": {
+          "loggingUsage": [],
+          "notes": "No direct usage of almaapitk logging internals (TextFormatter, JSONFormatter, redact_sensitive_data, alma_logging). Project uses stdlib logging. All almaapitk usage in alma_digital_upload.py plus BibliographicRecords.get_marc_subfield invoked from strategies/utils.",
+          "symbols": [
+            {
+              "calledAs": "AlmaAPIClient(environment)",
+              "kind": "class",
+              "locations": [
+                "alma_digital_upload.py:37",
+                "alma_digital_upload.py:185"
+              ],
+              "symbol": "almaapitk.AlmaAPIClient"
+            },
+            {
+              "calledAs": "Admin(client)",
+              "kind": "class",
+              "locations": [
+                "alma_digital_upload.py:37",
+                "alma_digital_upload.py:190"
+              ],
+              "symbol": "almaapitk.Admin"
+            },
+            {
+              "calledAs": "BibliographicRecords(client)",
+              "kind": "class",
+              "locations": [
+                "alma_digital_upload.py:37",
+                "alma_digital_upload.py:191"
+              ],
+              "symbol": "almaapitk.BibliographicRecords"
+            },
+            {
+              "calledAs": "alma_client.test_connection()",
+              "kind": "method",
+              "locations": [
+                "alma_digital_upload.py:187"
+              ],
+              "symbol": "AlmaAPIClient.test_connection"
+            },
+            {
+              "calledAs": "admin.get_set_info(set_id)",
+              "kind": "method",
+              "locations": [
+                "alma_digital_upload.py:206"
+              ],
+              "symbol": "Admin.get_set_info"
+            },
+            {
+              "calledAs": "admin.get_bib_set_members(set_id)",
+              "kind": "method",
+              "locations": [
+                "alma_digital_upload.py:219"
+              ],
+              "symbol": "Admin.get_bib_set_members"
+            },
+            {
+              "calledAs": "bibs.get_representations(mms_id)",
+              "kind": "method",
+              "locations": [
+                "alma_digital_upload.py:285"
+              ],
+              "symbol": "BibliographicRecords.get_representations"
+            },
+            {
+              "calledAs": "bibs.create_representation(mms_id=, access_rights_value=, access_rights_desc=, lib_code=, usage_type=)",
+              "kind": "method",
+              "locations": [
+                "alma_digital_upload.py:314"
+              ],
+              "symbol": "BibliographicRecords.create_representation"
+            },
+            {
+              "calledAs": "bibs.link_file_to_representation(mms_id=, representation_id=, file_path=)",
+              "kind": "method",
+              "locations": [
+                "alma_digital_upload.py:481"
+              ],
+              "symbol": "BibliographicRecords.link_file_to_representation"
+            },
+            {
+              "calledAs": "bibs_client.get_marc_subfield(mms_id, field, subfield)",
+              "kind": "method",
+              "locations": [
+                "strategies/marc_907e_strategy.py:114",
+                "utils/marc_extraction.py:81",
+                "utils/marc_extraction.py:82"
+              ],
+              "symbol": "BibliographicRecords.get_marc_subfield"
+            }
+          ]
+        },
+        "redaction": {
+          "checks": {
+            "helper_has_redacted_marker": true,
+            "helper_leaks_key": false,
+            "jsonformatter_leaks_key": false,
+            "textformatter_leaks_key": false
+          },
+          "evidence": "TextFormatter DEBUG output rendered: (headers={'Authorization': '***REDACTED***'}); fake key never appeared in TextFormatter, JSONFormatter, or redact_sensitive_data output",
+          "note": "No real API calls, no real credentials; fake key used.",
+          "offline": true,
+          "passed": true
+        },
+        "targetVersion": "0.4.5",
+        "tests": {
+          "command": "poetry run pytest -q",
+          "exitCode": 0,
+          "passed": true,
+          "summary": "25 passed in ~5s"
+        }
+      },
+      "instructions": [
+        "aligned = true ONLY IF: the test suite passed, the API surface verification reports aligned=true with no breaking entries, and the redaction check passed.",
+        "Write a concise markdown report to artifacts/compatibility-report.md summarizing each check, the pin change, and the verdict.",
+        "If aligned=false, populate `remediation` with specific, actionable steps to fix the repo so it aligns with the new version.",
+        "Set testsPass, apiAligned, redactionActive booleans to reflect each individual check."
+      ],
+      "outputFormat": "JSON: { aligned: boolean, testsPass: boolean, apiAligned: boolean, redactionActive: boolean, summary: string, remediation: string }",
+      "role": "Release-readiness reviewer",
+      "task": "Decide whether the almaapitk upgrade is safe to commit, based on test results, API-surface verification, and the redaction check."
+    }
+  },
+  "description": "Aggregate tests, API-surface, and redaction results into an alignment verdict and a human-readable report",
+  "io": {
+    "inputJsonPath": "tasks/01KSC4HBE1PTHJTBSZ9T804D3Y/input.json",
+    "outputJsonPath": "tasks/01KSC4HBE1PTHJTBSZ9T804D3Y/output.json"
+  },
+  "kind": "agent",
+  "labels": [
+    "review",
+    "verification"
+  ],
+  "title": "Compatibility verdict (attempt 1)",
+  "schemaVersion": "2026.01.tasks-v1",
+  "effectId": "01KSC4HBE1PTHJTBSZ9T804D3Y",
+  "taskId": "compatibility-review",
+  "invocationKey": "alma-digital-upload/almaapitk-upgrade-verify:S000006:compatibility-review",
+  "stepId": "S000006",
+  "inputs": {
+    "apiSurface": {
+      "aligned": true,
+      "breaking": [],
+      "results": [
+        {
+          "note": "__init__(self, environment='SANDBOX', *, max_retries=3, backoff_factor=1.0, retry=None, timeout=None, region='EU', host=None). One positional 'environment' accepted; others keyword-only with defaults, none newly required.",
+          "present": true,
+          "signatureMatch": true,
+          "symbol": "almaapitk.AlmaAPIClient"
+        },
+        {
+          "note": "(self) -> bool. No args.",
+          "present": true,
+          "signatureMatch": true,
+          "symbol": "AlmaAPIClient.test_connection()"
+        },
+        {
+          "note": "__init__(self, client). One positional client, required.",
+          "present": true,
+          "signatureMatch": true,
+          "symbol": "almaapitk.Admin"
+        },
+        {
+          "note": "(self, set_id: str) -> Dict. Positional accepted.",
+          "present": true,
+          "signatureMatch": true,
+          "symbol": "Admin.get_set_info(set_id)"
+        },
+        {
+          "note": "(self, set_id: str) -> List[str]. Positional accepted.",
+          "present": true,
+          "signatureMatch": true,
+          "symbol": "Admin.get_bib_set_members(set_id)"
+        },
+        {
+          "note": "__init__(self, client). One positional client, required.",
+          "present": true,
+          "signatureMatch": true,
+          "symbol": "almaapitk.BibliographicRecords"
+        },
+        {
+          "note": "(self, mms_id, representation_id=None). mms_id positional accepted.",
+          "present": true,
+          "signatureMatch": true,
+          "symbol": "BibliographicRecords.get_representations(mms_id)"
+        },
+        {
+          "note": "(self, mms_id, access_rights_value, access_rights_desc, lib_code, usage_type='PRESERVATION_MASTER'). All 5 keyword names exist; usage_type now has a default but still accepts the keyword; no newly-required param.",
+          "present": true,
+          "signatureMatch": true,
+          "symbol": "BibliographicRecords.create_representation(...)"
+        },
+        {
+          "note": "(self, mms_id, representation_id, file_path). All 3 keyword names exist, all supplied.",
+          "present": true,
+          "signatureMatch": true,
+          "symbol": "BibliographicRecords.link_file_to_representation(...)"
+        },
+        {
+          "note": "(self, mms_id, field, subfield) -> List[str]. All positional accepted.",
+          "present": true,
+          "signatureMatch": true,
+          "symbol": "BibliographicRecords.get_marc_subfield(mms_id, field, subfield)"
+        }
+      ]
+    },
+    "attempt": 1,
+    "inventory": {
+      "loggingUsage": [],
+      "notes": "No direct usage of almaapitk logging internals (TextFormatter, JSONFormatter, redact_sensitive_data, alma_logging). Project uses stdlib logging. All almaapitk usage in alma_digital_upload.py plus BibliographicRecords.get_marc_subfield invoked from strategies/utils.",
+      "symbols": [
+        {
+          "calledAs": "AlmaAPIClient(environment)",
+          "kind": "class",
+          "locations": [
+            "alma_digital_upload.py:37",
+            "alma_digital_upload.py:185"
+          ],
+          "symbol": "almaapitk.AlmaAPIClient"
+        },
+        {
+          "calledAs": "Admin(client)",
+          "kind": "class",
+          "locations": [
+            "alma_digital_upload.py:37",
+            "alma_digital_upload.py:190"
+          ],
+          "symbol": "almaapitk.Admin"
+        },
+        {
+          "calledAs": "BibliographicRecords(client)",
+          "kind": "class",
+          "locations": [
+            "alma_digital_upload.py:37",
+            "alma_digital_upload.py:191"
+          ],
+          "symbol": "almaapitk.BibliographicRecords"
+        },
+        {
+          "calledAs": "alma_client.test_connection()",
+          "kind": "method",
+          "locations": [
+            "alma_digital_upload.py:187"
+          ],
+          "symbol": "AlmaAPIClient.test_connection"
+        },
+        {
+          "calledAs": "admin.get_set_info(set_id)",
+          "kind": "method",
+          "locations": [
+            "alma_digital_upload.py:206"
+          ],
+          "symbol": "Admin.get_set_info"
+        },
+        {
+          "calledAs": "admin.get_bib_set_members(set_id)",
+          "kind": "method",
+          "locations": [
+            "alma_digital_upload.py:219"
+          ],
+          "symbol": "Admin.get_bib_set_members"
+        },
+        {
+          "calledAs": "bibs.get_representations(mms_id)",
+          "kind": "method",
+          "locations": [
+            "alma_digital_upload.py:285"
+          ],
+          "symbol": "BibliographicRecords.get_representations"
+        },
+        {
+          "calledAs": "bibs.create_representation(mms_id=, access_rights_value=, access_rights_desc=, lib_code=, usage_type=)",
+          "kind": "method",
+          "locations": [
+            "alma_digital_upload.py:314"
+          ],
+          "symbol": "BibliographicRecords.create_representation"
+        },
+        {
+          "calledAs": "bibs.link_file_to_representation(mms_id=, representation_id=, file_path=)",
+          "kind": "method",
+          "locations": [
+            "alma_digital_upload.py:481"
+          ],
+          "symbol": "BibliographicRecords.link_file_to_representation"
+        },
+        {
+          "calledAs": "bibs_client.get_marc_subfield(mms_id, field, subfield)",
+          "kind": "method",
+          "locations": [
+            "strategies/marc_907e_strategy.py:114",
+            "utils/marc_extraction.py:81",
+            "utils/marc_extraction.py:82"
+          ],
+          "symbol": "BibliographicRecords.get_marc_subfield"
+        }
+      ]
+    },
+    "redaction": {
+      "checks": {
+        "helper_has_redacted_marker": true,
+        "helper_leaks_key": false,
+        "jsonformatter_leaks_key": false,
+        "textformatter_leaks_key": false
+      },
+      "evidence": "TextFormatter DEBUG output rendered: (headers={'Authorization': '***REDACTED***'}); fake key never appeared in TextFormatter, JSONFormatter, or redact_sensitive_data output",
+      "note": "No real API calls, no real credentials; fake key used.",
+      "offline": true,
+      "passed": true
+    },
+    "targetVersion": "0.4.5",
+    "tests": {
+      "command": "poetry run pytest -q",
+      "exitCode": 0,
+      "passed": true,
+      "summary": "25 passed in ~5s"
+    }
+  }
+}

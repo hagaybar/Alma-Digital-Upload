@@ -1,0 +1,7 @@
+{
+  "committed": true,
+  "branch": "main",
+  "commit": "e894719",
+  "staged": ["pyproject.toml"],
+  "note": "poetry.lock gitignored (not committed); .a5c run state not committed. Commit references #1 without closing (Phase 1 only); not pushed."
+}

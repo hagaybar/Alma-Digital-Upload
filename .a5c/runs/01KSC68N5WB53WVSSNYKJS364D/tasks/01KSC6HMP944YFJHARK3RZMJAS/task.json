@@ -1,0 +1,63 @@
+{
+  "kind": "breakpoint",
+  "metadata": {
+    "label": "breakpoint",
+    "payload": {
+      "context": {
+        "files": [
+          {
+            "format": "markdown",
+            "path": "artifacts/findings-report.md"
+          }
+        ]
+      },
+      "expert": "owner",
+      "options": [
+        "Apply all proposed fixes",
+        "Apply selected fixes (I will specify)",
+        "Defer all (report only)",
+        "Abort"
+      ],
+      "question": "Security audit complete: 25 finding(s) ({\"actual-leak\":2,\"possible-leak\":19,\"theoretical\":4}). Review the findings report and choose how to proceed.",
+      "tags": [
+        "audit",
+        "review-gate"
+      ],
+      "title": "Review audit findings"
+    },
+    "requestedAt": "2026-05-24T05:15:25.256Z"
+  },
+  "title": "breakpoint",
+  "schemaVersion": "2026.01.tasks-v1",
+  "effectId": "01KSC6HMP944YFJHARK3RZMJAS",
+  "taskId": "__sdk.breakpoint",
+  "invocationKey": "alma-digital-upload/sensitive-data-leak-audit:S000005:__sdk.breakpoint",
+  "stepId": "S000005",
+  "inputs": {
+    "label": "breakpoint",
+    "payload": {
+      "context": {
+        "files": [
+          {
+            "format": "markdown",
+            "path": "artifacts/findings-report.md"
+          }
+        ]
+      },
+      "expert": "owner",
+      "options": [
+        "Apply all proposed fixes",
+        "Apply selected fixes (I will specify)",
+        "Defer all (report only)",
+        "Abort"
+      ],
+      "question": "Security audit complete: 25 finding(s) ({\"actual-leak\":2,\"possible-leak\":19,\"theoretical\":4}). Review the findings report and choose how to proceed.",
+      "tags": [
+        "audit",
+        "review-gate"
+      ],
+      "title": "Review audit findings"
+    },
+    "requestedAt": "2026-05-24T05:15:25.256Z"
+  }
+}

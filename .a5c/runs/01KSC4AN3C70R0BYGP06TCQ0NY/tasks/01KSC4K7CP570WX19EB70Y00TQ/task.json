@@ -1,0 +1,71 @@
+{
+  "kind": "breakpoint",
+  "metadata": {
+    "label": "breakpoint",
+    "payload": {
+      "context": {
+        "files": [
+          {
+            "format": "markdown",
+            "path": "artifacts/compatibility-report.md"
+          },
+          {
+            "format": "code",
+            "language": "diff",
+            "path": "artifacts/upgrade.diff"
+          }
+        ]
+      },
+      "expert": "owner",
+      "options": [
+        "Approve commit to main",
+        "Request changes",
+        "Skip commit (leave changes uncommitted)"
+      ],
+      "question": "almaapitk pin almaapitk = \">=0.3.1\" -> almaapitk = \">=0.4.5\" (locked 0.4.5). Verification: tests PASS, API surface aligned, redaction active. Review the diff and approve commit to main?",
+      "tags": [
+        "approval-gate",
+        "commit"
+      ],
+      "title": "Approve commit to main"
+    },
+    "requestedAt": "2026-05-24T04:41:20.022Z"
+  },
+  "title": "breakpoint",
+  "schemaVersion": "2026.01.tasks-v1",
+  "effectId": "01KSC4K7CP570WX19EB70Y00TQ",
+  "taskId": "__sdk.breakpoint",
+  "invocationKey": "alma-digital-upload/almaapitk-upgrade-verify:S000007:__sdk.breakpoint",
+  "stepId": "S000007",
+  "inputs": {
+    "label": "breakpoint",
+    "payload": {
+      "context": {
+        "files": [
+          {
+            "format": "markdown",
+            "path": "artifacts/compatibility-report.md"
+          },
+          {
+            "format": "code",
+            "language": "diff",
+            "path": "artifacts/upgrade.diff"
+          }
+        ]
+      },
+      "expert": "owner",
+      "options": [
+        "Approve commit to main",
+        "Request changes",
+        "Skip commit (leave changes uncommitted)"
+      ],
+      "question": "almaapitk pin almaapitk = \">=0.3.1\" -> almaapitk = \">=0.4.5\" (locked 0.4.5). Verification: tests PASS, API surface aligned, redaction active. Review the diff and approve commit to main?",
+      "tags": [
+        "approval-gate",
+        "commit"
+      ],
+      "title": "Approve commit to main"
+    },
+    "requestedAt": "2026-05-24T04:41:20.022Z"
+  }
+}

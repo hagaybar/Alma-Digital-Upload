@@ -1,0 +1,25 @@
+{
+  "description": "Confirm the credential-redaction fix is active in the toolkit logging path, offline (no API calls, no real keys)",
+  "io": {
+    "inputJsonPath": "tasks/01KSC4E1DYTFB37XCD9ER3KV49/input.json",
+    "outputJsonPath": "tasks/01KSC4E1DYTFB37XCD9ER3KV49/output.json"
+  },
+  "kind": "shell",
+  "labels": [
+    "redaction",
+    "security",
+    "verification"
+  ],
+  "shell": {
+    "command": "# Orchestrator runs an offline python check exercising almaapitk TextFormatter at DEBUG with a FAKE Authorization header and asserts it is redacted"
+  },
+  "title": "Offline redaction check (attempt 1)",
+  "schemaVersion": "2026.01.tasks-v1",
+  "effectId": "01KSC4E1DYTFB37XCD9ER3KV49",
+  "taskId": "verify-redaction",
+  "invocationKey": "alma-digital-upload/almaapitk-upgrade-verify:S000005:verify-redaction",
+  "stepId": "S000005",
+  "inputs": {
+    "attempt": 1
+  }
+}

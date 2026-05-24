@@ -1,0 +1,20 @@
+{
+  "type": "EFFECT_REQUESTED",
+  "recordedAt": "2026-05-24T04:36:46.010Z",
+  "data": {
+    "harness": "claude-code",
+    "effectId": "01KSC4AVSAK4GCWFZJ5EH7DSKA",
+    "invocationKey": "alma-digital-upload/almaapitk-upgrade-verify:S000001:analyze-usage",
+    "invocationHash": "e34233523a406997ddfe2112c82441938e18ccd2b90079053654ec9bca79fb8c",
+    "stepId": "S000001",
+    "taskId": "analyze-usage",
+    "kind": "agent",
+    "label": "analysis",
+    "taskDefRef": "tasks/01KSC4AVSAK4GCWFZJ5EH7DSKA/task.json",
+    "labels": [
+      "analysis",
+      "inventory"
+    ]
+  },
+  "checksum": "448ceecab50de2ecdeda8a9cdcb197901043fe3896543551912b00253a7fe303"
+}

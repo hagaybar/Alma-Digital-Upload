@@ -1,0 +1,62 @@
+{
+  "agent": {
+    "name": "general-purpose",
+    "outputSchema": {
+      "properties": {
+        "loggingUsage": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "notes": {
+          "type": "string"
+        },
+        "symbols": {
+          "items": {
+            "type": "object"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "symbols"
+      ],
+      "type": "object"
+    },
+    "prompt": {
+      "context": {
+        "targetVersion": "0.4.5"
+      },
+      "instructions": [
+        "Search the repo (exclude .a5c/, .venv/, site-packages) for every import from almaapitk and every use of its symbols.",
+        "For each used symbol (classes like AlmaAPIClient, Admin, BibliographicRecords; methods like test_connection; constructor arguments), record: the symbol path, how it is called (positional/keyword args), and the file:line.",
+        "Identify any use of almaapitk logging/formatter internals (TextFormatter, JSONFormatter, redact_sensitive_data, alma_logging) if present.",
+        "Do NOT read or print secrets, .env files, or shell rc files. Only read project Python source.",
+        "Return the structured inventory; do not modify any files."
+      ],
+      "outputFormat": "JSON: { symbols: [{ symbol, kind, calledAs, locations:[string] }], loggingUsage: [string], notes: string }",
+      "role": "Python dependency-compatibility analyst",
+      "task": "Produce a precise inventory of everything this repository uses from the almaapitk package, so a later step can verify the new version still provides it."
+    }
+  },
+  "description": "Catalogue every almaapitk symbol, attribute, and call signature the repo depends on",
+  "io": {
+    "inputJsonPath": "tasks/01KSC4AVSAK4GCWFZJ5EH7DSKA/input.json",
+    "outputJsonPath": "tasks/01KSC4AVSAK4GCWFZJ5EH7DSKA/output.json"
+  },
+  "kind": "agent",
+  "labels": [
+    "analysis",
+    "inventory"
+  ],
+  "title": "Inventory almaapitk usage in the repo",
+  "schemaVersion": "2026.01.tasks-v1",
+  "effectId": "01KSC4AVSAK4GCWFZJ5EH7DSKA",
+  "taskId": "analyze-usage",
+  "invocationKey": "alma-digital-upload/almaapitk-upgrade-verify:S000001:analyze-usage",
+  "stepId": "S000001",
+  "inputs": {
+    "targetVersion": "0.4.5"
+  }
+}
