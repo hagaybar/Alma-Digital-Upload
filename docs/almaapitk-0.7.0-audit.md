@@ -49,7 +49,7 @@ default unchanged).
 ## (e) Result
 
 - **Pin:** `>=0.7.0`. Locally, `poetry update almaapitk` resolves 0.7.0 and
-  `poetry check --lock` passes. The lock isn't committed (gitignored).
+  `poetry check --lock` passes. The lock was later committed in the same PR (commit 74620c0), with `.gitignore` no longer excluding it.
 - **L2:** 25 passed.
 - **L3:** not run in the TAU sandbox, because it uploads. The owner uploads one test file on
   SANDBOX (Sandbox bucket) before the next production use.

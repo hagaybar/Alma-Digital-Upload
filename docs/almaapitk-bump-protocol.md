@@ -99,10 +99,9 @@ This is a **manually run, writing** job. It creates digital representations in A
 S3 files to them. It is run on demand, not on a schedule, so the person running it is the last
 safety net.
 
-- **`poetry.lock` is gitignored here.** Step 3 still runs `poetry update almaapitk` and
-  `poetry check --lock` locally to prove the pin resolves, but only `pyproject.toml` is
-  committed. On masedet the version is whatever the pin resolves to at deploy time, so the pin
-  floor is the real control. For a rollback, pin `==<previous>` rather than relying on a lock.
+- **`poetry.lock` is committed** (since the 0.7.0 bump). Step 3's `poetry update almaapitk`
+  changes it, and the updated lock goes in the bump PR, so masedet installs exactly what was
+  tested. For a rollback, revert the PR (pin and lock together).
 - **Usage surface:**
   - `alma_digital_upload.py`: `AlmaAPIClient(env)`, `Admin.get_set_info`,
     `Admin.get_bib_set_members`, `BibliographicRecords.get_representations`,
