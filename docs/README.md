@@ -17,9 +17,9 @@ Alma Digital Upload provides a streamlined workflow for:
 
 - **Multiple Matching Strategies**: Choose between MARC field matching or filename-based matching
 - **Dry-Run Mode**: Test your configuration without making actual changes
-- **Step-by-Step Execution**: Run individual steps for testing and debugging
+- **Step-by-Step Execution**: Stop after any step (1-4) for testing and debugging
 - **Comprehensive Logging**: Detailed logs for tracking progress and troubleshooting
-- **Resume Support**: Resume interrupted uploads from where they stopped
+- **Resume helper (library only)**: `utils.ResumeHelper` builds a resume TSV from old loader logs; it is not wired into the CLI and does not read this tool's own `alma_upload_*.log` files
 
 ## Installation
 
@@ -78,6 +78,13 @@ Create a configuration file based on `config/config.example.json`:
 }
 ```
 
+`environment` must be exactly `SANDBOX` or `PRODUCTION` (upper case). Alma accepts any case, but
+the S3 bucket choice compares exactly: any other value, `sandbox` included, uploads to the
+production bucket.
+
+`options.dry_run` in the config has no effect today: the CLI always sets it, to `false` with
+`--live` and to `true` otherwise. Only `--live` makes a run write.
+
 ## Usage
 
 ### Basic Usage
@@ -122,19 +129,20 @@ See [FILENAME_WORKFLOW.md](FILENAME_WORKFLOW.md) for detailed instructions.
 
 ### Step-by-Step Execution
 
-Run individual steps for testing:
+`--step N` runs steps 1 through N, then stops. There is no way to run a later step alone, so
+`--step 3 --live` creates representations and `--step 4 --live` is the same as a full live run:
 
 ```bash
-# Step 1: Get set members only
+# Step 1: Get set members, then stop
 poetry run python alma_digital_upload.py --config config.json --step 1
 
-# Step 2: Match files only
+# Steps 1-2: also match files
 poetry run python alma_digital_upload.py --config config.json --step 2
 
-# Step 3: Create representations only
+# Steps 1-3: also create representations (writes only with --live)
 poetry run python alma_digital_upload.py --config config.json --step 3
 
-# Step 4: Upload and link only
+# Steps 1-4: also upload and link (writes only with --live)
 poetry run python alma_digital_upload.py --config config.json --step 4
 
 # All steps (default)
@@ -154,12 +162,12 @@ poetry run python alma_digital_upload.py --config config.json --step all
 - Reports matched vs unmatched records
 
 ### Step 3: Create Representations
-- Checks for existing representations
-- Creates new representations where needed
+- Checks for existing representations and reuses the first one found (any usage type)
+- Creates new `PRESERVATION_MASTER` representations where none exist
 - Records representation IDs for linking
 
 ### Step 4: Upload and Link
-- Uploads files to AWS S3
+- Uploads files to AWS S3 at `{institution_code}/upload/{key}/{filename}`, where the key is the 907$e value or the MMS ID (region fixed to eu-central-1 in code; `aws.region` is not read)
 - Links files to Alma representations
 - Reports success/failure for each file
 
@@ -210,7 +218,9 @@ renamer = FolderRenamer(config)
 
 ### Resume Helper
 
-Resume interrupted uploads:
+Build a resume TSV from a log of the older loader (it looks for `alma_loader_*.log` and its
+✓/⚠️ lines; this tool writes `alma_upload_*.log`, which it does not parse). The main tool has no
+resume option: re-running a live job uploads and links every matched file again.
 
 ```python
 from utils import ResumeHelper
@@ -257,7 +267,11 @@ Alma-Digital-Upload/
 ├── docs/
 │   ├── README.md
 │   ├── FOLDER_PATH_WORKFLOW.md
-│   └── FILENAME_WORKFLOW.md
+│   ├── FILENAME_WORKFLOW.md
+│   └── almaapitk-0.4.6-audit.md  # dependency bump audit (2026-07)
+├── historical_logs/            # configs of past runs (2025-07)
+├── CLAUDE.md                   # rules for the building agent
+├── AGENTS.md                   # the reviewer's brief
 ├── pyproject.toml
 └── .gitignore
 ```

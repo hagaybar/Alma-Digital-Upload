@@ -2,7 +2,7 @@
   "input": {
     "alma_set_id": "35693806880004146",
     "environment": "PRODUCTION",
-    "files_root_directory": "C:/Users/hagaybar/OneDrive - Tel-Aviv University/My Personal files/systems/Alma/Alma-D/archives_load/LGTB/IL-LGBTQ-ARCHIVE"
+    "files_root_directory": "<local path removed>"
   },
   "columns": [
     {"name": "MMS_ID", "source": "alma_set"},

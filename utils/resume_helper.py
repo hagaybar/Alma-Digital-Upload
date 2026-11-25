@@ -7,43 +7,14 @@ log files and creating resume TSV files with only unprocessed records.
 """
 
 import csv
-import json
 import logging
 import os
-import re
 from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Set
+from typing import List, Optional, Set
 
 logger = logging.getLogger(__name__)
-
-# Keys whose values are treated as secrets and redacted before persisting config.
-_SECRET_KEY_PATTERN = re.compile(
-    r"api[_-]?key|secret|token|password|passwd|credential|authorization|auth",
-    re.IGNORECASE,
-)
-
-
-def _redact_config(value: Any) -> Any:
-    """
-    Return a deep copy of a config structure with secret values redacted.
-
-    Any dict key matching common secret names (api_key, secret, token,
-    password, credential, authorization, auth) has its value replaced by
-    "***REDACTED***". Non-secret keys are preserved intact.
-    """
-    if isinstance(value, dict):
-        redacted: Dict[Any, Any] = {}
-        for key, item in value.items():
-            if isinstance(key, str) and _SECRET_KEY_PATTERN.search(key):
-                redacted[key] = "***REDACTED***"
-            else:
-                redacted[key] = _redact_config(item)
-        return redacted
-    if isinstance(value, list):
-        return [_redact_config(item) for item in value]
-    return value
 
 
 @dataclass
@@ -333,59 +304,6 @@ class ResumeHelper:
 
         except Exception as e:
             logger.error(f"Error creating resume TSV: {type(e).__name__}")
-            raise
-
-    def create_resume_config(
-        self,
-        original_config_path: str,
-        resume_tsv_path: str,
-        output_config_path: Optional[str] = None,
-    ) -> str:
-        """
-        Create a new config file that uses the resume TSV.
-
-        Args:
-            original_config_path: Path to original config
-            resume_tsv_path: Path to resume TSV file
-            output_config_path: Output config path (auto-generated if None)
-
-        Returns:
-            Path to new config file
-        """
-        if output_config_path is None:
-            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-            output_config_path = os.path.join(
-                self.output_directory, f"resume_config_{timestamp}.json"
-            )
-
-        logger.info(f"Creating resume config: {output_config_path}")
-
-        try:
-            with open(original_config_path, "r") as f:
-                config = json.load(f)
-
-            # Modify config for direct TSV input
-            if "input" not in config:
-                config["input"] = {}
-
-            config["input"]["use_direct_tsv"] = True
-            config["input"]["direct_tsv_path"] = resume_tsv_path
-            config["input"]["skip_tsv_generation"] = True
-
-            # Update output settings
-            if "output_settings" not in config:
-                config["output_settings"] = {}
-            config["output_settings"]["file_prefix"] = "alma_resume"
-
-            # Write new config (redact any secret values before persisting)
-            with open(output_config_path, "w") as f:
-                json.dump(_redact_config(config), f, indent=2)
-
-            logger.info(f"Resume config created: {output_config_path}")
-            return output_config_path
-
-        except Exception as e:
-            logger.error(f"Error creating resume config: {type(e).__name__}")
             raise
 
     def display_analysis(self, results: ProcessingResults) -> None:
