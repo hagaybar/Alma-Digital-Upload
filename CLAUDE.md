@@ -29,6 +29,9 @@ No scheduler entry and no CI. `main` → masedet DevSandbox; `prod` → masedet 
 
 ## Rules
 Enforced by code:
+- A live run checks what its steps need (`files_root` folder, `library_code`, AWS variables and
+  bucket) before its first Alma call, and stops with nothing written if any is missing
+  (`_preflight_live`, #21).
 - Nothing writes without `--live` (`main()`: the CLI overrides `options.dry_run`, so the config
   value has no effect). Dry run still reads Alma (set, bibs, representations).
 - Step 3 reuses the first existing representation of any usage type; it creates a

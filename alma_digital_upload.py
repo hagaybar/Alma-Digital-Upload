@@ -607,6 +607,35 @@ class AlmaDigitalUploader:
 
         return match_results
 
+    def _preflight_live(self, step: str) -> None:
+        """
+        Check what the live steps of this run need, before anything is written.
+
+        Raises:
+            ValueError: naming every missing setting
+        """
+        if self.dry_run:
+            return
+        last_step = 4 if step == "all" else int(step)
+        problems = []
+
+        if last_step >= 2:
+            files_root = self.config.get("matching", {}).get("files_root", "")
+            if not files_root or not os.path.isdir(files_root):
+                problems.append("matching.files_root is not an existing folder")
+        if last_step >= 3 and not self.library_code:
+            problems.append("alma.library_code is empty (needed to create representations)")
+        if last_step >= 4:
+            try:
+                self._get_aws_credentials()
+            except ValueError as e:
+                problems.append(str(e))
+
+        if problems:
+            for problem in problems:
+                self.logger.error(f"Live run preflight: {problem}")
+            raise ValueError("Live run preflight failed; nothing was written")
+
     def run(self, step: str = "all") -> int:
         """
         Run the upload workflow.
@@ -634,6 +663,10 @@ class AlmaDigitalUploader:
         self.logger.info(f"Set ID: {self.set_id}")
         self.logger.info(f"Dry-run: {self.dry_run}")
         self.logger.info(f"Step: {step}")
+
+        # Before any Alma call: a live run must not create representations and
+        # only then find out it can't upload (#21).
+        self._preflight_live(step)
 
         # Initialize clients
         self.initialize_clients()
