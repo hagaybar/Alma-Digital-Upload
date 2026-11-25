@@ -39,6 +39,8 @@ from almaapitk import AlmaAPIClient, Admin, BibliographicRecords
 from strategies import Marc907eStrategy, MmsIdFilenameStrategy, MatchStrategy
 from strategies.base import MatchResult, UploadRecord
 
+VALID_ENVIRONMENTS = ("SANDBOX", "PRODUCTION")
+
 
 def setup_logging(output_dir: str, prefix: str = "alma_upload") -> logging.Logger:
     """
@@ -167,7 +169,16 @@ class AlmaDigitalUploader:
 
         # Extract common config
         alma_config = config.get("alma", {})
-        self.environment = alma_config.get("environment", "SANDBOX")
+        # Normalise once: almaapitk upper-cases the environment, so the bucket choice
+        # must too, or "sandbox" would write to the PRODUCTION bucket (#12).
+        environment = alma_config.get("environment", "SANDBOX")
+        environment = str(environment or "").strip().upper()
+        if environment not in VALID_ENVIRONMENTS:
+            raise ValueError(
+                "alma.environment must be SANDBOX or PRODUCTION, "
+                f"got {alma_config.get('environment')!r}"
+            )
+        self.environment = environment
         self.set_id = alma_config.get("set_id", "")
         self.library_code = alma_config.get("library_code", "")
         self.access_rights_code = alma_config.get("access_rights_code", "")
@@ -368,11 +379,12 @@ class AlmaDigitalUploader:
         secret_key = os.getenv("AWS_SECRET")
 
         if self.environment == "SANDBOX":
-            bucket_name = os.getenv("ALMA_SB_BUCKET_NAME")
             bucket_var = "ALMA_SB_BUCKET_NAME"
-        else:
-            bucket_name = os.getenv("ALMA_PROD_BUCKET_NAME")
+        elif self.environment == "PRODUCTION":
             bucket_var = "ALMA_PROD_BUCKET_NAME"
+        else:
+            raise ValueError(f"Unknown environment: {self.environment!r}")
+        bucket_name = os.getenv(bucket_var)
 
         if not access_key:
             raise ValueError("AWS_ACCESS_KEY environment variable not set")
