@@ -24,6 +24,19 @@ from strategies.base import MatchResult, MatchStrategy
 logger = logging.getLogger(__name__)
 
 
+def _is_inside(path: str, root: str) -> bool:
+    """
+    True if `path` is `root` itself or below it, compared lexically (after
+    resolving "." and ".."), so links placed inside root by its admin still work.
+    """
+    root_abs = os.path.normcase(os.path.abspath(root))
+    path_abs = os.path.normcase(os.path.abspath(path))
+    try:
+        return os.path.commonpath([root_abs, path_abs]) == root_abs and path_abs != root_abs
+    except ValueError:  # different drives on Windows
+        return False
+
+
 class Marc907eStrategy(MatchStrategy):
     """
     Strategy that matches files using MARC 907$e field values.
@@ -135,8 +148,23 @@ class Marc907eStrategy(MatchStrategy):
                     error=f"Empty MARC {self.marc_field}${self.marc_subfield} value",
                 )
 
-            # Construct file path
+            # Construct file path. The value comes from catalogue data, so it must stay
+            # inside files_root: an absolute path or ".." would otherwise pick any folder
+            # on the machine and upload it to Alma (#23).
             folder_path = os.path.join(self.files_root, primary_value)
+            if not _is_inside(folder_path, self.files_root):
+                logger.warning(
+                    f"{mms_id}: MARC {self.marc_field}${self.marc_subfield} leads outside "
+                    "files_root; not matched"
+                )
+                return MatchResult(
+                    mms_id=mms_id,
+                    matched=False,
+                    match_key=primary_value,
+                    status="outside_files_root",
+                    error=f"Path is outside files_root: {primary_value}",
+                    metadata={"marc_values": marc_values},
+                )
 
             # Check if path exists
             if not os.path.exists(folder_path):

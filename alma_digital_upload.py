@@ -42,6 +42,23 @@ from strategies.base import MatchResult, UploadRecord
 VALID_ENVIRONMENTS = ("SANDBOX", "PRODUCTION")
 
 
+def describe_error(e: Exception) -> str:
+    """
+    Exception type plus the Alma identifiers that explain it (#22).
+
+    Never the exception text, which can carry request data (#2): only the HTTP
+    status, Alma's error code and its tracking id, when the exception has them.
+    """
+    parts = []
+    for label, attr in (("HTTP", "status_code"), ("Alma code", "alma_code"),
+                        ("tracking id", "tracking_id")):
+        value = getattr(e, attr, None)
+        if value not in (None, ""):
+            parts.append(f"{label} {value}")
+    name = type(e).__name__
+    return f"{name} ({', '.join(parts)})" if parts else name
+
+
 def setup_logging(output_dir: str, prefix: str = "alma_upload") -> logging.Logger:
     """
     Setup logging to both file and console.
@@ -189,6 +206,9 @@ class AlmaDigitalUploader:
 
         options = config.get("options", {})
         self.dry_run = options.get("dry_run", True)
+
+        # Records or files that failed in this run; non-zero ends the CLI with exit 2.
+        self.failures = 0
 
         # Initialize clients
         self.alma_client: Optional[AlmaAPIClient] = None
@@ -358,13 +378,14 @@ class AlmaDigitalUploader:
                 result.metadata["representation_action"] = "error"
                 result.metadata["representation_error"] = type(e).__name__
                 failed += 1
-                self.logger.error(f"Error processing {mms_id}: {type(e).__name__}")
+                self.logger.error(f"Error processing {mms_id}: {describe_error(e)}")
 
         self.logger.info(f"\n=== Representation Summary ===")
         self.logger.info(f"Created: {created}")
         self.logger.info(f"Already existing: {existing}")
         self.logger.info(f"Failed: {failed}")
         self.logger.info(f"Skipped (dry-run): {skipped}")
+        self.failures += failed
 
         return match_results
 
@@ -412,7 +433,7 @@ class AlmaDigitalUploader:
         except Exception as e:
             self.logger.error(
                 f"Could not read files of representation for {mms_id}, "
-                f"nothing uploaded for it: {type(e).__name__}"
+                f"nothing uploaded for it: {describe_error(e)}"
             )
             return None
 
@@ -511,7 +532,11 @@ class AlmaDigitalUploader:
             result.metadata["skipped_files"] = []
 
             # Re-runs must not upload and link a file the representation already has (#13).
-            existing_names = self._linked_file_names(mms_id, representation_id)
+            # A representation created in this run, or a dry-run placeholder, has none.
+            if result.metadata.get("representation_action") in ("created", "dry_run"):
+                existing_names = set()
+            else:
+                existing_names = self._linked_file_names(mms_id, representation_id)
             if existing_names is None:
                 failed_uploads += len(result.file_paths)
                 continue
@@ -538,9 +563,17 @@ class AlmaDigitalUploader:
                     s3_key = self._upload_file_to_s3(
                         file_path, s3_path_key, aws_credentials
                     )
-                    files_uploaded += 1
-                    result.metadata["uploaded_files"].append(s3_key)
+                except Exception as e:
+                    failed_uploads += 1
+                    self.logger.error(
+                        f"Upload failed for {filename}: {describe_error(e)}"
+                    )
+                    continue
 
+                files_uploaded += 1
+                result.metadata["uploaded_files"].append(s3_key)
+
+                try:
                     # Link to representation
                     link_response = self.bibs.link_file_to_representation(
                         mms_id=mms_id,
@@ -559,9 +592,9 @@ class AlmaDigitalUploader:
                         )
 
                 except Exception as e:
-                    failed_uploads += 1
+                    failed_links += 1
                     self.logger.error(
-                        f"Upload failed for {filename}: {type(e).__name__}"
+                        f"Uploaded but link failed for {filename}: {describe_error(e)}"
                     )
 
         self.logger.info(f"\n=== Upload Summary ===")
@@ -570,22 +603,70 @@ class AlmaDigitalUploader:
         self.logger.info(f"Already linked (skipped): {files_skipped}")
         self.logger.info(f"Upload failures: {failed_uploads}")
         self.logger.info(f"Link failures: {failed_links}")
+        self.failures += failed_uploads + failed_links
 
         return match_results
 
-    def run(self, step: str = "all") -> None:
+    def _preflight_live(self, step: str) -> None:
+        """
+        Check what the live steps of this run need, before anything is written.
+
+        Raises:
+            ValueError: naming every missing setting
+        """
+        if self.dry_run:
+            return
+        last_step = 4 if step == "all" else int(step)
+        problems = []
+
+        if last_step >= 2:
+            files_root = self.config.get("matching", {}).get("files_root", "")
+            if not files_root or not os.path.isdir(files_root):
+                problems.append("matching.files_root is not an existing folder")
+        if last_step >= 3 and not self.library_code:
+            problems.append("alma.library_code is empty (needed to create representations)")
+        if last_step >= 4:
+            try:
+                self._get_aws_credentials()
+            except ValueError as e:
+                problems.append(str(e))
+
+        if problems:
+            for problem in problems:
+                self.logger.error(f"Live run preflight: {problem}")
+            raise ValueError("Live run preflight failed; nothing was written")
+
+    def run(self, step: str = "all") -> int:
         """
         Run the upload workflow.
 
         Args:
             step: Step to run ("1", "2", "3", "4", "all")
+
+        Returns:
+            Number of records or files that failed (0 = clean run)
         """
+        self._run_steps(step)
+        if self.failures:
+            self.logger.error(
+                f"Workflow finished with {self.failures} failure(s); see errors above"
+            )
+        else:
+            self.logger.info("Workflow completed successfully")
+        return self.failures
+
+    def _run_steps(self, step: str) -> None:
+        """Run steps 1 to `step`; per-record failures are counted in self.failures."""
         self.logger.info("=== Alma Digital Upload Started ===")
         self.logger.info(f"Strategy: {self.strategy.name}")
         self.logger.info(f"Environment: {self.environment}")
         self.logger.info(f"Set ID: {self.set_id}")
         self.logger.info(f"Dry-run: {self.dry_run}")
         self.logger.info(f"Step: {step}")
+
+        # Before any Alma call: a live run must not create representations and
+        # only then find out it can't upload (#21).
+        self._preflight_live(step)
 
         # Initialize clients
         self.initialize_clients()
@@ -626,7 +707,6 @@ class AlmaDigitalUploader:
             return
 
         self.logger.info("\n=== All Steps Complete! ===")
-        self.logger.info("Workflow completed successfully")
 
 
 def main():
@@ -721,8 +801,11 @@ Examples:
 
         # Create uploader and run
         uploader = AlmaDigitalUploader(config, strategy, logger)
-        uploader.run(args.step)
+        failures = uploader.run(args.step)
 
+        if failures:
+            print(f"\nFinished with {failures} failure(s) (see log for details)")
+            sys.exit(2)
         print("\nUpload completed successfully!")
 
     except Exception as e:
