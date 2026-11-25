@@ -39,7 +39,10 @@ Enforced by code:
 - Real configs stay out of git: `.gitignore` drops `*_config.json`, `*_prod.json`,
   `*_sandbox.json`, data files (`*.pdf`, `*.tsv`, `*.csv`, `*.xls*`), `logs/`, `output/`.
 - Errors are logged as exception type + record id, never the exception text (commit `ae0f4ca`,
-  issue #2); keep it that way in new code. boto3/botocore loggers are pinned to WARNING.
+  issue #2); keep it that way in new code. `describe_error()` adds the HTTP status, Alma error
+  code and tracking id, which are safe (#22).
+- Any failed record or file makes the CLI end with "Finished with N failure(s)" and exit code 2
+  (1 = the run itself stopped); 0 only for a clean run (#22). boto3/botocore loggers are pinned to WARNING.
 
 - `alma.environment` is normalised once in `__init__` (trimmed, upper-cased) and must be
   `SANDBOX` or `PRODUCTION`; anything else stops the run. The S3 bucket is chosen by explicit
