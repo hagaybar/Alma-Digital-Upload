@@ -75,3 +75,18 @@ def test_dry_run_reports_skip_without_writing():
     [result] = up.step4_upload_and_link([match("a.txt", "b.txt")])
     assert up._upload_file_to_s3.call_count == 0
     assert result.metadata["skipped_files"] == ["a.txt"]
+
+
+def test_new_representation_needs_no_files_read():
+    # A representation created in this run (or a dry-run placeholder) has no files yet:
+    # don't ask Alma, which can't know a placeholder id and would fail the record.
+    for action, rep_id in (("dry_run", "DRY_RUN_ID"), ("created", REP)):
+        up = make_uploader(dry_run=(action == "dry_run"))
+        up.bibs.get_representation_files.side_effect = RuntimeError("must not be called")
+        result = match("a.txt")
+        result.metadata.update(representation_action=action, representation_id=rep_id)
+        [out] = up.step4_upload_and_link([result])
+        assert up.bibs.get_representation_files.call_count == 0
+        assert out.metadata["skipped_files"] == []
+        if action == "created":
+            assert uploaded_names(up) == ["a.txt"]

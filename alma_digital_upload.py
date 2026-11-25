@@ -511,7 +511,11 @@ class AlmaDigitalUploader:
             result.metadata["skipped_files"] = []
 
             # Re-runs must not upload and link a file the representation already has (#13).
-            existing_names = self._linked_file_names(mms_id, representation_id)
+            # A representation created in this run, or a dry-run placeholder, has none.
+            if result.metadata.get("representation_action") in ("created", "dry_run"):
+                existing_names = set()
+            else:
+                existing_names = self._linked_file_names(mms_id, representation_id)
             if existing_names is None:
                 failed_uploads += len(result.file_paths)
                 continue
