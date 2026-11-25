@@ -17,15 +17,15 @@ No scheduler entry and no CI. `main` → masedet DevSandbox; `prod` → masedet 
 - `tests/`, `scripts/smoke_project.py`: offline only (imports, strategy matching on temp folders).
 
 ## Commands
-- Install: `poetry install` (Python 3.12; `poetry.lock` is gitignored, so `almaapitk >=0.4.6`
-  resolves to the newest release).
+- Install: `poetry install` (Python 3.12). `poetry.lock` is committed, so masedet installs
+  exactly the tested versions (almaapitk 0.7.0).
 - Tests: `poetry run pytest -q` and `poetry run python scripts/smoke_project.py`.
 - Dry run: `poetry run python alma_digital_upload.py -c <config.json>` (reads Alma, writes nothing;
   a dry step 4 still needs the AWS variables set, or it stops).
 - Live: add `--live`. `--step N` runs steps 1..N and stops (`--step 4` = everything).
 - Needs `ALMA_SB_API_KEY` / `ALMA_PROD_API_KEY`, and for step 4 `AWS_ACCESS_KEY`, `AWS_SECRET`,
-  `ALMA_SB_BUCKET_NAME` / `ALMA_PROD_BUCKET_NAME`. The tau sandbox has no AWS keys or prod Alma
-  key: live runs happen on the owner's machine, not here.
+  `ALMA_SB_BUCKET_NAME` / `ALMA_PROD_BUCKET_NAME`. In the tau sandbox only SANDBOX live
+  runs work (Sandbox bucket, with `ALMA_PROD_API_KEY` unset); production runs happen on the owner's machine.
 
 ## Rules
 Enforced by code:
@@ -48,7 +48,8 @@ Written only:
 - A change to the run path gets one SANDBOX live run before `main` is promoted to `prod`.
 - Changing what is written to Alma or S3, or how files match records, needs a test that would
   fail without the change.
-- Bump `almaapitk` through a PR with an audit like `docs/almaapitk-0.4.6-audit.md`.
+- Any `almaapitk` pin change follows `docs/almaapitk-bump-protocol.md` (binding): one bump at a
+  time, from this repo, with an audit in `docs/almaapitk-<version>-audit.md`.
 
 ## Where to look
 - `docs/README.md`: config fields, usage, steps. `docs/FOLDER_PATH_WORKFLOW.md` and
