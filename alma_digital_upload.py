@@ -395,6 +395,38 @@ class AlmaDigitalUploader:
 
         return access_key, secret_key, bucket_name
 
+    def _linked_file_names(
+        self, mms_id: str, representation_id: str
+    ) -> Optional[set]:
+        """
+        Names of the files already linked to a representation.
+
+        Returns None when the files can't be read; the caller then uploads nothing
+        for that record, since it can't tell what is already there.
+        """
+        try:
+            response = self.bibs.get_representation_files(mms_id, representation_id)
+            if not response.success:
+                raise RuntimeError("files read failed")
+            data = response.json()
+        except Exception as e:
+            self.logger.error(
+                f"Could not read files of representation for {mms_id}, "
+                f"nothing uploaded for it: {type(e).__name__}"
+            )
+            return None
+
+        files = data.get("representation_file") or []
+        if isinstance(files, dict):
+            files = [files]
+        total = data.get("total_record_count", len(files))
+        if total > len(files):
+            self.logger.warning(
+                f"{mms_id}: Alma listed {len(files)} of {total} linked files; "
+                "unlisted ones can't be checked"
+            )
+        return {os.path.basename(f.get("path") or "") for f in files} - {""}
+
     def _upload_file_to_s3(
         self,
         file_path: str,
@@ -460,6 +492,7 @@ class AlmaDigitalUploader:
 
         files_uploaded = 0
         files_linked = 0
+        files_skipped = 0
         failed_uploads = 0
         failed_links = 0
 
@@ -475,9 +508,22 @@ class AlmaDigitalUploader:
 
             result.metadata["uploaded_files"] = []
             result.metadata["linked_files"] = []
+            result.metadata["skipped_files"] = []
+
+            # Re-runs must not upload and link a file the representation already has (#13).
+            existing_names = self._linked_file_names(mms_id, representation_id)
+            if existing_names is None:
+                failed_uploads += len(result.file_paths)
+                continue
 
             for file_path in result.file_paths:
                 filename = os.path.basename(file_path)
+
+                if filename in existing_names:
+                    files_skipped += 1
+                    result.metadata["skipped_files"].append(filename)
+                    self.logger.debug(f"Already linked, skipped: {filename}")
+                    continue
 
                 try:
                     if self.dry_run:
@@ -521,6 +567,7 @@ class AlmaDigitalUploader:
         self.logger.info(f"\n=== Upload Summary ===")
         self.logger.info(f"Files uploaded: {files_uploaded}")
         self.logger.info(f"Files linked: {files_linked}")
+        self.logger.info(f"Already linked (skipped): {files_skipped}")
         self.logger.info(f"Upload failures: {failed_uploads}")
         self.logger.info(f"Link failures: {failed_links}")
 

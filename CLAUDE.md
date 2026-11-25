@@ -41,10 +41,9 @@ Enforced by code:
 - `alma.environment` is normalised once in `__init__` (trimmed, upper-cased) and must be
   `SANDBOX` or `PRODUCTION`; anything else stops the run. The S3 bucket is chosen by explicit
   match on both values (#12).
-
-Known risks (agents must know; open issue #13, not fixed):
-- Re-running a live job uploads and links every matched file again; there is no resume or
-  "already linked" check in the CLI.
+- Step 4 reads each representation's linked files first and skips any file whose name is already
+  there, so a re-run resumes without re-uploading; if that read fails, the record gets no upload
+  (#13). Alma itself refuses a second file with the same name (error 702250).
 
 Written only:
 - A change to the run path gets one SANDBOX live run before `main` is promoted to `prod`.
