@@ -3,7 +3,9 @@
 A command-line tool, run by hand, that attaches local files to Alma bib records as digital
 representations: it reads an Alma set, matches files to its records, creates representations,
 uploads the files to the institution's S3 bucket and links them. One run = one JSON config.
-No scheduler entry and no CI. `main` → masedet DevSandbox; `prod` → masedet Prod (owner only).
+No scheduler entry and no CI. `main` → test deployment; `prod` → production (owner only).
+Deployment and operations notes for the production host are kept in the owner's private
+documentation; the user-level instructions say where.
 
 ## Layout
 - `alma_digital_upload.py`: the CLI and the four steps (1 set members, 2 match, 3 representations,
@@ -17,7 +19,7 @@ No scheduler entry and no CI. `main` → masedet DevSandbox; `prod` → masedet 
 - `tests/`, `scripts/smoke_project.py`: offline only (imports, strategy matching on temp folders).
 
 ## Commands
-- Install: `poetry install` (Python 3.12). `poetry.lock` is committed, so masedet installs
+- Install: `poetry install` (Python 3.12). `poetry.lock` is committed, so production installs
   exactly the tested versions (almaapitk 0.7.0).
 - Tests: `poetry run pytest -q` and `poetry run python scripts/smoke_project.py`.
 - Dry run: `poetry run python alma_digital_upload.py -c <config.json>` (reads Alma, writes nothing;

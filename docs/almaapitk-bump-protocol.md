@@ -3,7 +3,7 @@
 Every change to this repo's `almaapitk` pin follows this document, step by step. It is binding:
 a bump that skips a step is not done. `CLAUDE.md` points here.
 
-**Why it exists.** This repo is a production consumer of `almaapitk`. It runs on masedet, and
+**Why it exists.** This repo is a production consumer of `almaapitk`. It runs on the production workstation, and
 `main` and `prod` auto-deploy on a schedule with no second checkpoint. A bad bump on a
 scheduled repo can fail silently in production. A bump is therefore a small, audited change
 made inside this repo, never a one-line pin edit pushed from somewhere else.
@@ -77,10 +77,10 @@ owner runs it before merging.
 - Tick the issue's boxes that are actually done.
 - The owner merges.
 
-### 8. DevSandbox (masedet)
+### 8. Test deployment
 
 After the next scheduled auto-deploy of `main`, confirm at least one clean cycle on the
-DevSandbox clone (see "This repo" for what clean means). Note it in the issue.
+test deployment (see "This repo" for what clean means). Note it in the issue.
 
 ### 9. Prod
 
@@ -100,7 +100,7 @@ S3 files to them. It is run on demand, not on a schedule, so the person running 
 safety net.
 
 - **`poetry.lock` is committed** (since the 0.7.0 bump). Step 3's `poetry update almaapitk`
-  changes it, and the updated lock goes in the bump PR, so masedet installs exactly what was
+  changes it, and the updated lock goes in the bump PR, so production installs exactly what was
   tested. For a rollback, revert the PR (pin and lock together).
 - **Usage surface:**
   - `alma_digital_upload.py`: `AlmaAPIClient(env)`, `Admin.get_set_info`,
@@ -119,5 +119,5 @@ safety net.
 - **L2:** `poetry run pytest -q` and `poetry run python scripts/smoke_project.py`.
 - **L3 (SANDBOX only, `ALMA_PROD_API_KEY` unset, Sandbox S3 bucket):** upload one test file
   end to end into a test set with one record.
-- **Clean DevSandbox cycle:** not applicable (the job isn't scheduled). The next manual run
+- **Clean test-deployment cycle:** not applicable (the job isn't scheduled). The next manual run
   after the merge is checked against its log before any production run.
