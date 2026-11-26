@@ -45,6 +45,6 @@ in signature and behavior across the bump.
 
 ## Not yet done (operator steps)
 
-`main` → `prod` fast-forward + masedet `git pull` / `poetry install` are operator steps.
+`main` → `prod` fast-forward + the production `git pull` / `poetry install` are operator steps.
 This is a manually-run repo, so the operator is the live backstop — run the upload workflow
 against SANDBOX once before promoting.

@@ -47,7 +47,7 @@ def test_value_leading_outside_root_is_refused(tree, value_for):
 
 def test_link_placed_inside_root_is_followed(tree):
     # Links inside files_root are set up by whoever manages that folder (e.g. a junction
-    # to another drive on masedet), not by catalogue data, so they stay allowed.
+    # to another drive on the production workstation), not by catalogue data, so they stay allowed.
     root, outside = tree
     (root / "link").symlink_to(outside, target_is_directory=True)
     assert match(root, "link").matched
